@@ -25,8 +25,8 @@
                 </div>
                 <div class="user-section">
                     <div class="user-profile">
-                        <img src="<?= BASE_URL; ?>assets/img/users.png" class="user-avatar">
-                        <span>namamu</span>
+                        <img src="<?= BASE_URL; ?>assets/img/<?= $_SESSION['profil'] ?? 'users.png'; ?>" class="user-avatar">
+                        <span><?= $_SESSION['nama_user']; ?></span>
                     </div>
                 </div>
             </div>

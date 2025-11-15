@@ -328,5 +328,8 @@ tbody tr:hover {
     color: white;
     border-color: #2563eb;
 }
+.profil img{
+    width: 90px;
+}
 
 /* form */

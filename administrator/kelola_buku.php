@@ -2,9 +2,14 @@
 session_start();
 require_once '../config/config.php';
 require_once '../config/function.php';
-$data['title'] = 'document';
+$data['title'] = 'Kelola Buku';
 $data['css'] = ['layout.css','admin.css','alert.css'];
-$data['header'] ='Kelola Peminjaman';
+$data['header'] ='Kelola Buku';
+if(!($_SESSION['role'] == 'admin' && $_SESSION['nama_user'])){
+    header("Location: login.php");
+    exit;
+}
+
 // ambil data buku
 $books = getAllBooks();
 $totalBooks = fetchOne("SELECT COUNT(*) AS total FROM buku");

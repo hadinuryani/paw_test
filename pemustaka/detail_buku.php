@@ -6,8 +6,7 @@ $data['header'] ='Categories';
 require_once '../config/config.php';
 require_once '../config/function.php';
 
-
-if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'pemustaka') {
+if(!($_SESSION['role'] == 'pemustaka' && $_SESSION['nama_user'])){
     header("Location: login.php");
     exit;
 }
@@ -77,12 +76,6 @@ require_once '../components/header.php';
                 <button type="submit" class="btn btn-primary">Pinjam Buku</button>
             </form>
         </div>
-
-      
-
-
-
-    
 
 </div>
 

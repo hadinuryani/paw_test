@@ -9,13 +9,12 @@
         </div>
 
         <?php 
-        // Pastikan role sudah ada
+        // cek role
         $role = $_SESSION['role'] ?? null;
 
         switch($role):
         
-        /* =======================
-           MENU UNTUK PEMUSTAKA
+        /* MENU UNTUK PEMUSTAKA
         ========================*/
         case 'pemustaka': ?>
 
@@ -38,8 +37,7 @@
         break;
 
 
-        /* =====================
-            MENU UNTUK ADMIN
+        /* MENU UNTUK ADMIN
         ======================*/
         case 'admin': ?>
 
@@ -78,4 +76,5 @@
             <a href="<?= BASE_URL; ?>logout.php">Logout</a>
         </div>
     </div>
+    
 </div>

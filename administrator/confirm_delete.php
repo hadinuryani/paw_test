@@ -2,11 +2,15 @@
 session_start();
 require_once '../config/config.php';
 require_once '../config/function.php';
-
-$data['title'] = 'document';
+// set data
+$data['title'] = 'Confirmasi';
 $data['css'] = ['layout.css','admin.css','alert.css'];
-$data['header'] ='Kelola Peminjaman';
-
+$data['header'] ='Confirmasi Delete';
+// cek session
+if(!($_SESSION['role'] == 'admin' && $_SESSION['nama_user'])){
+    header("Location: login.php");
+    exit;
+}
 if (!isset($_POST['id_buku'])) {
     header('location: ' . BASE_URL . 'administrator/kelola_buku.php');
     exit;

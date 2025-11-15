@@ -2,13 +2,17 @@
 session_start();
 require_once '../config/config.php';
 require_once '../config/function.php';
-
-$data['title'] = 'document';
+// set data
+$data['title'] = 'Lihat Pemustaka';
 $data['css'] = ['layout.css','admin.css'];
-$data['header'] ='Kelola Pemustaka';
+$data['header'] ='Lihat Daftar Pemustaka';
+// cek session
+if(!($_SESSION['role'] == 'admin' && $_SESSION['nama_user'])){
+    header("Location: login.php");
+    exit;
+}
 
 $users = getAllUsers();
-
 require_once '../components/header.php';
 ?> 
 
@@ -29,8 +33,8 @@ require_once '../components/header.php';
             <tr>
                 <td>
                     <div class="book-info">
-                        <div class="book-cover-small">
-                            <?= $u['profil'] ? '<img src="'.BASE_URL.'uploads/'.$u['profil'].'" alt="profil">' : '👤'; ?>
+                        <div class="profil">
+                            <?= $u['profil'] ? '<img src="'.BASE_URL.'assets/img/'.$u['profil'].'" alt="profil">' : '👤'; ?>
                         </div>
                     </div>
                 </td>

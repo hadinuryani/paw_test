@@ -1,11 +1,13 @@
 <?php 
 session_start();
 $data['title'] = 'document';
-$data['css'] = ['layout.css','book.css','admin.css']; // manggil admin css karena butuh style table
+$data['css'] = ['layout.css','book.css','alert.css','admin.css']; // manggil admin css karena butuh style table
 $data['header'] ='Categories';
-// if(!($_SESSION['id_users'] && $_SESSION['nama_user'] && $_SESSION['pemustaka'])){
-//     //lempar
-// }
+
+if(!($_SESSION['role'] == 'pemustaka' && $_SESSION['nama_user'])){
+    header("Location: login.php");
+    exit;
+}
 
 require_once '../config/config.php';
 require_once '../config/function.php';
@@ -36,9 +38,7 @@ require_once '../components/header.php';
 <div class="table-container">
     <table>
         <thead>
-            
             <tr>
-                <th>COVER</th>
                 <th>JUDUL</th>
                 <th>TANGGAL PINJAM</th>
                 <th>TANGGAL KEMBALI</th>
@@ -48,46 +48,35 @@ require_once '../components/header.php';
         </thead>
 
         <tbody>
-<?php if ($riwayat): ?>
-    <?php foreach ($riwayat as $row): ?>
-        <tr>
-            <!-- COVER -->
-            <td>-</td>
-
-            <!-- JUDUL -->
-            <td><?= htmlspecialchars($row['judul']); ?></td>
-
-            <!-- TANGGAL PINJAM -->
-            <td><?= htmlspecialchars($row['tanggal_peminjaman']); ?></td>
-
-            <!-- TANGGAL KEMBALI -->
-            <td><?= $row['tanggal_kembali'] ?: '-'; ?></td>
-
-            <!-- STATUS -->
-            <td>
-                <span class="status <?= strtolower($row['status']); ?>">
-                    <?= htmlspecialchars($row['status']); ?>
-                </span>
-            </td>
-
-            <!-- AKSI -->
-            <td>
-                <?php if ($row['status'] === 'borrow'): ?>
-                    <a href="kembalikan.php?id=<?= $row['id_peminjaman']; ?>" class="btn-kembali">
-                        Kembalikan
-                    </a>
-                <?php else: ?>
-                    -
-                <?php endif; ?>
-            </td>
-        </tr>
-    <?php endforeach; ?>
-<?php else: ?>
-    <tr>
-        <td colspan="6" class="no-data">Belum ada riwayat peminjaman.</td>
-    </tr>
-<?php endif; ?>
-</tbody>
+        <?php if ($riwayat): ?>
+            <?php foreach ($riwayat as $row): ?>
+                <tr>
+                    <td><?= $row['judul']; ?></td>
+                    <td><?= $row['tanggal_peminjaman']; ?></td>
+                    <td><?= $row['tanggal_kembali'] ?: '-'; ?></td>
+                    <td>
+                        <span class="badge  <?= $row['status'] == 'pending' ? 'badge-danger' : ($row['status'] == 'returned' ? 'badge-success' : 'badge-warning'); ?>">
+                            <?= $row['status']; ?>
+                        </span>
+                    </td>
+                    <!-- AKSI -->
+                    <td>
+                        <?php if ($row['status'] === 'borrow'): ?>
+                            <a href="kembalikan_buku.php?id=<?= $row['id_peminjaman']; ?>" class="btn-return">
+                                Kembalikan
+                            </a>
+                        <?php else: ?>
+                            -
+                        <?php endif; ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <tr>
+                <td colspan="6" class="no-data">Belum ada riwayat peminjaman.</td>
+            </tr>
+        <?php endif; ?>
+        </tbody>
 
     </table>
 

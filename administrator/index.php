@@ -2,24 +2,24 @@
 session_start();
 require_once '../config/config.php';
 require_once '../config/function.php';
-
+// set data
 $data['title'] = 'Manage Books';
 $data['css'] = ['layout.css','admin.css'];
 $data['header'] = 'Manage Books';
-
-require_once '../components/header.php';
+// cek session
+if(!($_SESSION['role'] == 'admin' && $_SESSION['nama_user'])){
+    header("Location: login.php");
+    exit;
+}
 
 // Ambil total buku
 $totalBooks = fetchOne("SELECT COUNT(*) AS total FROM buku");
-
-
 // Ambil pending review, jika tidak ada kolom status, buat 0 dulu
 $pending = fetchOne("SELECT COUNT(*) AS p FROM peminjaman WHERE status = 'pending'");
-
-
 // Ambil semua buku untuk tabel
 $books = fetchData("SELECT * FROM buku ORDER BY id_buku DESC");
 
+require_once '../components/header.php';
 ?>
 
 <!-- Stats Cards -->

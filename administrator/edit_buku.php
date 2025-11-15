@@ -2,16 +2,16 @@
 session_start();
 require_once '../config/config.php';
 require_once '../config/function.php';
-
+// set data
 $data['title'] = 'Edit Buku';
 $data['css'] = ['layout.css','admin.css'];
-$data['header'] = 'edit';
+$data['header'] = 'Edit Buku';
+// cek session
+if(!($_SESSION['role'] == 'admin' && $_SESSION['nama_user'])){
+    header("Location: login.php");
+    exit;
+}
 
-require_once '../components/header.php';
-
-/* =========================
-   Ambil ID buku
-========================= */
 if (!isset($_GET['id'])) {
     header("Location: kelola_buku.php");
     exit;
@@ -26,11 +26,8 @@ if (!$buku) {
     exit;
 }
 
-/* =========================
-   Proses update
-========================= */
 if (isset($_POST['submit'])) {
-
+    
     $dataUpdate = [
         'judul'        => $_POST['judul'],
         'penulis'      => $_POST['penulis'],
@@ -38,7 +35,7 @@ if (isset($_POST['submit'])) {
         'tahun_terbit' => $_POST['tahun_terbit'],
         'kategori'     => $_POST['kategori'],
     ];
-
+    
     if (updateBook($id_buku, $dataUpdate)) {
         header("Location: kelola_buku.php?update_success=1");
         exit;
@@ -47,6 +44,7 @@ if (isset($_POST['submit'])) {
     }
 }
 
+require_once '../components/header.php';
 ?>
 
 <div class="form-container">

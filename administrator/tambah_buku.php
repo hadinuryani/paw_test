@@ -6,6 +6,10 @@ require_once '../config/function.php';
 $data['title'] = 'Tambah Buku';
 $data['css'] = ['layout.css','admin.css',];
 $data['header'] ='Tambah Buku';
+if(!($_SESSION['role'] == 'admin' && $_SESSION['nama_user'])){
+    header("Location: login.php");
+    exit;
+}
 require_once '../components/header.php';
 
 // proses submit form

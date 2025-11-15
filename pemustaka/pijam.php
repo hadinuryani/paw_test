@@ -3,9 +3,11 @@ session_start();
 $data['title'] = 'document';
 $data['css'] = ['layout.css','book.css'];
 $data['header'] ='Categories';
-// if(!($_SESSION['id_users'] && $_SESSION['nama_user'] && $_SESSION['pemustaka'])){
-//     //lempar
-// }
+
+if(!($_SESSION['role'] == 'pemustaka' && $_SESSION['nama_user'])){
+    header("Location: login.php");
+    exit;
+}
 
 require_once '../config/config.php';
 require_once '../config/function.php';
