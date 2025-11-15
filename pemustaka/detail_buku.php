@@ -1,7 +1,11 @@
 <?php
 session_start();
-require_once 'config/config.php';
-require_once 'config/function.php';
+$data['title'] = 'document';
+$data['css'] = ['layout.css','book.css'];
+$data['header'] ='Categories';
+require_once '../config/config.php';
+require_once '../config/function.php';
+
 
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'pemustaka') {
     header("Location: login.php");
@@ -41,30 +45,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-require_once 'components/header.php';
+require_once '../components/header.php';
 ?>
 
 <div class="book-detail">
+       
+        <div class="book-cover-detail">
+            <div class="title" style="padding: 20px; text-align: center; color: #1f2937;">
+                <div style="font-size: 18px; font-weight: 700; margin-bottom: 10px;">
+                    <?= htmlspecialchars($buku['judul']); ?>
+                </div>
+                <div style="font-size: 12px;">
+                    <?= htmlspecialchars($buku['penulis']); ?>
+                </div>
+            </div>
+        </div>
+        <div class="detail-info">
+            <h2><?= htmlspecialchars($buku['judul']); ?></h2>
+            <p><strong>Penulis:</strong> <?= htmlspecialchars($buku['penulis']); ?></p>
+            <p><strong>Kategori:</strong> <?= htmlspecialchars($buku['kategori']); ?></p>
+            <p><strong>Tahun Terbit:</strong> <?= htmlspecialchars($buku['tahun_terbit']); ?></p>
+            <?php if ($msg): ?>
+            <div class="alert-success"><?= $msg; ?></div>
+            <?php endif; ?>
 
-    <h2><?= htmlspecialchars($buku['judul']); ?></h2>
-    <p><strong>Penulis:</strong> <?= htmlspecialchars($buku['penulis']); ?></p>
-    <p><strong>Kategori:</strong> <?= htmlspecialchars($buku['kategori']); ?></p>
-    <p><strong>Tahun Terbit:</strong> <?= htmlspecialchars($buku['tahun_terbit']); ?></p>
+            <?php if ($err): ?>
+                <div class="alert-error"><?= $err; ?></div>
+            <?php endif; ?>
 
-    <hr>
+            <form method="POST">
+                <button type="submit" class="btn btn-primary">Pinjam Buku</button>
+            </form>
+        </div>
 
-    <?php if ($msg): ?>
-        <div class="alert-success"><?= $msg; ?></div>
-    <?php endif; ?>
+      
 
-    <?php if ($err): ?>
-        <div class="alert-error"><?= $err; ?></div>
-    <?php endif; ?>
 
-    <form method="POST">
-        <button type="submit" class="btn btn-primary">PINJAM BUKU</button>
-    </form>
+
+    
 
 </div>
 
-<?php require_once 'components/footer.php'; ?>
+<?php require_once '../components/footer.php'; ?>

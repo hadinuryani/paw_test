@@ -134,14 +134,14 @@ function getAllUsers() {
 function countActiveBorrow($id_user, $id_buku) {
     $sql = "SELECT COUNT(*) AS total 
             FROM peminjaman 
-            WHERE id_pemustaka = :u 
+            WHERE id_user = :u 
               AND id_buku = :b 
               AND status IN ('pending', 'borrow')";
     return fetchData($sql, ['u' => $id_user, 'b' => $id_buku], true)['total'];
 }
 // Tambah peminjaman
 function createBorrow($id_user, $id_buku) {
-    $sql = "INSERT INTO peminjaman (id_pemustaka, id_buku, status, tanggal_pinjam) 
+    $sql = "INSERT INTO peminjaman (id_user, id_buku, status, tanggal_peminjaman) 
             VALUES (:u, :b, 'pending', NOW())";
 
     return runQuery($sql, [
