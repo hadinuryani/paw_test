@@ -36,7 +36,6 @@
         <?php 
         break;
 
-
         /* MENU UNTUK ADMIN
         ======================*/
         case 'admin': ?>
@@ -70,7 +69,7 @@
     </div>
 
     <!-- Logout -->
-    <div class="logout">
+    <div>
         <div class="menu-item">
             <img class="menu-icon" src="<?= BASE_URL; ?>assets/img/logout.png" alt="">
             <a href="<?= BASE_URL; ?>logout.php">Logout</a>

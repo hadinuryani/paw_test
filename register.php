@@ -38,8 +38,7 @@ if (isset($_POST['register'])) {
             ]);
 
             if ($insert) {
-                header('location: ' . BASE_URL . 'login.php');
-                // kasih alert 'Registrasi berhasil! Silakan login.';
+                header('location: ' . BASE_URL . 'login.php?susses=Registrasi berhasil! Silakan login.');
             } else {
                 // kasih alert 'Terjadi kesalahan saat registrasi.';
             }

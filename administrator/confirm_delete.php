@@ -8,7 +8,7 @@ $data['css'] = ['layout.css','admin.css','alert.css'];
 $data['header'] ='Confirmasi Delete';
 // cek session
 if(!($_SESSION['role'] == 'admin' && $_SESSION['nama_user'])){
-    header("Location: login.php");
+    header('location: ' . BASE_URL . 'login.php');
     exit;
 }
 if (!isset($_POST['id_buku'])) {

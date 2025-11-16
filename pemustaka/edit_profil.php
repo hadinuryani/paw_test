@@ -5,7 +5,7 @@ $data['css'] = ['layout.css','book.css','card.css'];
 $data['header'] ='Categories';
 
 if(!($_SESSION['role'] == 'pemustaka' && $_SESSION['nama_user'])){
-    header("Location: login.php");
+    header('location: ' . BASE_URL . 'login.php');
     exit;
 }
 

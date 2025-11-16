@@ -4,7 +4,7 @@ require_once '../config/config.php';
 require_once '../config/function.php';
 
 if(!($_SESSION['role'] == 'pemustaka' && $_SESSION['nama_user'])){
-    header("Location: login.php");
+    header('location: ' . BASE_URL . 'login.php');
     exit;
 }
 // Ambil data dari form
@@ -24,7 +24,6 @@ $result = runQuery($sql, [
     ':id_peminjaman' => $id_peminjaman,
     ':id_user'  => $id_user
 ]);
-var_dump($result);die;
 if ($result) {
     header('location: ' . BASE_URL . 'pemustaka/riwayat.php');
     exit;

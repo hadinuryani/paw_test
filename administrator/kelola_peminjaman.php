@@ -6,7 +6,7 @@ $data['title'] = 'document';
 $data['css'] = ['layout.css','admin.css','alert.css'];
 $data['header'] ='Kelola Peminjaman';
 if(!($_SESSION['role'] == 'admin' && $_SESSION['nama_user'])){
-    header("Location: login.php");
+    header('location: ' . BASE_URL . 'login.php');
     exit;
 }
 
@@ -17,19 +17,19 @@ require_once '../components/header.php'
     <?php if (isset($_GET['success'])): ?>
         <div class="alert alert-success">
             <span class="alert-icon">✔️</span>
-            <?= htmlspecialchars($_GET['success']); ?>
+            <?= $_GET['success']; ?>
         </div>
     <?php endif; ?>
 
     <?php if (isset($_GET['error'])): ?>
         <div class="alert alert-error">
             <span class="alert-icon">❌</span>
-            <?= htmlspecialchars($_GET['error']); ?>
+            <?= $_GET['error']; ?>
         </div>
     <?php endif; ?>
 </div>
 <!-- Books Table -->
-<div class="table-container">
+<section class="table-container">
     <table>
         <thead>
             <tr>
@@ -49,14 +49,14 @@ require_once '../components/header.php'
                     <div class="book-info">
                         <div class="book-cover-small">📘</div>
                         <div class="book-details">
-                            <h4><?= htmlspecialchars($p['judul']); ?></h4>
+                            <h4><?= $p['judul']; ?></h4>
                             <p>Peminjaman: <?= $p['tanggal_peminjaman']; ?></p>
                         </div>
                     </div>
                 </td>
-                <td><?= htmlspecialchars($p['penulis']); ?></td>
-                <td><?= htmlspecialchars($p['kategori']); ?></td>
-                <td><?= htmlspecialchars($p['nama_user']); ?></td> <!-- Tambahan -->
+                <td><?= $p['penulis']; ?></td>
+                <td><?= $p['kategori']; ?></td>
+                <td><?= $p['nama_user']; ?></td> <!-- Tambahan -->
                 <td>
                     <?php if($p['status'] == 'pending'): ?>
                         <span class="badge badge-warning">Pending</span>
@@ -90,19 +90,8 @@ require_once '../components/header.php'
         </tbody>
     </table>
 
-                <!-- Pagination -->
-                <div class="pagination">
-                    <a href="#" class="page-btn">«</a>
-                    <a href="#" class="page-btn active">1</a>
-                    <a href="#" class="page-btn">2</a>
-                    <a href="#" class="page-btn">3</a>
-                    <a href="#" class="page-btn">4</a>
-                    <a href="#" class="page-btn">5</a>
-                    <a href="#" class="page-btn">...</a>
-                    <a href="#" class="page-btn">124</a>
-                    <a href="#" class="page-btn">»</a>
-                </div>
-            </div>
+
+</section>
 
 
 <?php require_once '../components/footer.php' ?>

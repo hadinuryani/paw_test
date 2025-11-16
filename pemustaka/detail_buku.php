@@ -7,7 +7,7 @@ require_once '../config/config.php';
 require_once '../config/function.php';
 
 if(!($_SESSION['role'] == 'pemustaka' && $_SESSION['nama_user'])){
-    header("Location: login.php");
+    header('location: ' . BASE_URL . 'login.php');
     exit;
 }
 
@@ -28,12 +28,12 @@ $msg = "";
 $err = "";
 
 // Jika tombol PINJAM ditekan
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if (isset($_POST['pinjam'])) {
 
     // Hitung peminjaman aktif (pending + borrow)
     $count = countActiveBorrow($id_user, $id_buku);
 
-    if ($count >= 2) {
+    if ($count > 2) {
         $err = "Anda sudah meminjam buku ini 2 kali dan belum mengembalikannya.";
     } else {
         if (createBorrow($id_user, $id_buku)) {
@@ -47,36 +47,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 require_once '../components/header.php';
 ?>
 
-<div class="book-detail">
-       
-        <div class="book-cover-detail">
-            <div class="title" style="padding: 20px; text-align: center; color: #1f2937;">
-                <div style="font-size: 18px; font-weight: 700; margin-bottom: 10px;">
-                    <?= htmlspecialchars($buku['judul']); ?>
-                </div>
-                <div style="font-size: 12px;">
-                    <?= htmlspecialchars($buku['penulis']); ?>
-                </div>
+<section class="book-detail">
+    <!--cover -->
+    <div class="book-cover-detail">
+        <div class="title">
+            <div style="font-size: 18px; font-weight: 700; margin-bottom: 10px;">
+                <?= $buku['judul']; ?>
+            </div>
+            <div style="font-size: 12px;">
+                <?= $buku['penulis']; ?>
             </div>
         </div>
-        <div class="detail-info">
-            <h2><?= htmlspecialchars($buku['judul']); ?></h2>
-            <p><strong>Penulis:</strong> <?= htmlspecialchars($buku['penulis']); ?></p>
-            <p><strong>Kategori:</strong> <?= htmlspecialchars($buku['kategori']); ?></p>
-            <p><strong>Tahun Terbit:</strong> <?= htmlspecialchars($buku['tahun_terbit']); ?></p>
-            <?php if ($msg): ?>
+    </div>
+
+    <div class="detail-info">
+        <h2><?= $buku['judul']; ?></h2>
+        <p><strong>Penulis:</strong> <?= $buku['penulis']; ?></p>
+        <p><strong>Kategori:</strong> <?= $buku['kategori']; ?></p>
+        <p><strong>Tahun Terbit:</strong> <?= $buku['tahun_terbit']; ?></p>
+        <!-- pesan saat meminjam buku -->
+        <?php if ($msg): ?>
             <div class="alert-success"><?= $msg; ?></div>
-            <?php endif; ?>
+        <?php endif; ?>
 
-            <?php if ($err): ?>
-                <div class="alert-error"><?= $err; ?></div>
-            <?php endif; ?>
+        <?php if ($err): ?>
+            <div class="alert-error"><?= $err; ?></div>
+        <?php endif; ?>
 
-            <form method="POST">
-                <button type="submit" class="btn btn-primary">Pinjam Buku</button>
-            </form>
-        </div>
+        <form action="#" method="POST">
+            <button type="submit" name="pinjam" class="btn btn-primary">Pinjam Buku</button>
+        </form>
+    </div>
 
-</div>
+</section>
 
 <?php require_once '../components/footer.php'; ?>

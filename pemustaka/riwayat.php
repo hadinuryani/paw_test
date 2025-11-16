@@ -1,11 +1,11 @@
 <?php 
 session_start();
 $data['title'] = 'document';
-$data['css'] = ['layout.css','book.css','alert.css','admin.css']; // manggil admin css karena butuh style table
+$data['css'] = ['layout.css','admin.css']; // manggil admin css karena butuh style table
 $data['header'] ='Categories';
 
 if(!($_SESSION['role'] == 'pemustaka' && $_SESSION['nama_user'])){
-    header("Location: login.php");
+    header('location: ' . BASE_URL . 'login.php');
     exit;
 }
 
@@ -62,9 +62,7 @@ require_once '../components/header.php';
                     <!-- AKSI -->
                     <td>
                         <?php if ($row['status'] === 'borrow'): ?>
-                            <a href="kembalikan_buku.php?id=<?= $row['id_peminjaman']; ?>" class="btn-return">
-                                Kembalikan
-                            </a>
+                            <a href="kembalikan_buku.php?id=<?= $row['id_peminjaman']; ?>" class="menu-item">↩️</a>
                         <?php else: ?>
                             -
                         <?php endif; ?>
@@ -80,14 +78,6 @@ require_once '../components/header.php';
 
     </table>
 
-    <!-- Pagination (Belum dibuat dinamich) -->
-    <div class="pagination">
-        <a href="#" class="page-btn">«</a>
-        <a href="#" class="page-btn active">1</a>
-        <a href="#" class="page-btn">2</a>
-        <a href="#" class="page-btn">3</a>
-        <a href="#" class="page-btn">»</a>
-    </div>
 </div>
 
 <?php require_once '../components/footer.php' ?>

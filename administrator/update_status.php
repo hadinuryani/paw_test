@@ -1,8 +1,9 @@
 <?php
+session_start();
 require_once '../config/config.php';
 require_once '../config/function.php';
 if(!($_SESSION['role'] == 'admin' && $_SESSION['nama_user'])){
-    header("Location: login.php");
+    header('location: ' . BASE_URL . 'login.php');
     exit;
 }
 
@@ -19,6 +20,5 @@ if (updateStatusPeminjaman((int)$id_peminjaman, $action)) {
 } else {
     header('location: ' . BASE_URL . 'administrator/kelola_peminjaman.php?error=Status peminjaman gagal diperbarui!');
     exit;
-  
 }
 ?>

@@ -10,7 +10,7 @@
 </head>
 <body>
     
-<div class="container">
+<main class="container">
     <!-- navbar -->
     <?php require_once BASE_PATH . 'components/navbar.php'; ?>
     <!-- Main Content -->
@@ -18,11 +18,14 @@
         <div class="content-area">
             <!-- Header -->
             <div class="header">
-                
-                <div class="search-bar">
-                    <span class="search-icon">🔍</span>
-                    <input type="text" placeholder="Search your favourite books">
-                </div>
+                <?php if($_SESSION['role'] == 'pemustaka'): ?>
+                    <div class="search-bar">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" placeholder="Search your favourite books">
+                    </div>
+                <?php else : ?>
+                        <h1 class="text-dashbord">DASBORD ADMIN</h1>
+                <?php endif; ?>
                 <div class="user-section">
                     <div class="user-profile">
                         <img src="<?= BASE_URL; ?>assets/img/<?= $_SESSION['profil'] ?? 'users.png'; ?>" class="user-avatar">

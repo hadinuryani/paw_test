@@ -8,7 +8,7 @@ $data['css'] = ['layout.css','admin.css'];
 $data['header'] = 'Manage Books';
 // cek session
 if(!($_SESSION['role'] == 'admin' && $_SESSION['nama_user'])){
-    header("Location: login.php");
+    header('location: ' . BASE_URL . 'login.php');
     exit;
 }
 
@@ -24,7 +24,6 @@ require_once '../components/header.php';
 
 <!-- Stats Cards -->
 <div class="stats-grid">
-
     <!-- Total Books -->
     <div class="stat-card">
         <div class="stat-header">
@@ -79,14 +78,6 @@ require_once '../components/header.php';
         </tbody>
     </table>
 
-    <!-- Pagination (Belum dibuat dinamich) -->
-    <div class="pagination">
-        <a href="#" class="page-btn">«</a>
-        <a href="#" class="page-btn active">1</a>
-        <a href="#" class="page-btn">2</a>
-        <a href="#" class="page-btn">3</a>
-        <a href="#" class="page-btn">»</a>
-    </div>
 </div>
 
 <?php require_once '../components/footer.php' ?>

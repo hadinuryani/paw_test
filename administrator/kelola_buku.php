@@ -6,7 +6,7 @@ $data['title'] = 'Kelola Buku';
 $data['css'] = ['layout.css','admin.css','alert.css'];
 $data['header'] ='Kelola Buku';
 if(!($_SESSION['role'] == 'admin' && $_SESSION['nama_user'])){
-    header("Location: login.php");
+    header('location: ' . BASE_URL . 'login.php');
     exit;
 }
 
@@ -41,8 +41,6 @@ require_once '../components/header.php'
 </div>
             <!-- Books Table -->
             <div class="table-container">
-                
-
                 <table>
                     <thead>
                         <tr>
@@ -85,18 +83,6 @@ require_once '../components/header.php'
                     </tbody>
                 </table>
 
-                <!-- Pagination -->
-                <div class="pagination">
-                    <a href="#" class="page-btn">«</a>
-                    <a href="#" class="page-btn active">1</a>
-                    <a href="#" class="page-btn">2</a>
-                    <a href="#" class="page-btn">3</a>
-                    <a href="#" class="page-btn">4</a>
-                    <a href="#" class="page-btn">5</a>
-                    <a href="#" class="page-btn">...</a>
-                    <a href="#" class="page-btn">124</a>
-                    <a href="#" class="page-btn">»</a>
-                </div>
             </div>
 
 

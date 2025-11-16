@@ -4,7 +4,7 @@ require_once '../config/config.php';
 require_once '../config/function.php';
 // cek session
 if(!($_SESSION['role'] == 'admin' && $_SESSION['nama_user'])){
-    header("Location: login.php");
+    header('location: ' . BASE_URL . 'login.php');
     exit;
 }
 

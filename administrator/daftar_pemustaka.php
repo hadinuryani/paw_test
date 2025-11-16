@@ -8,7 +8,7 @@ $data['css'] = ['layout.css','admin.css'];
 $data['header'] ='Lihat Daftar Pemustaka';
 // cek session
 if(!($_SESSION['role'] == 'admin' && $_SESSION['nama_user'])){
-    header("Location: login.php");
+    header('location: ' . BASE_URL . 'login.php');
     exit;
 }
 
@@ -46,15 +46,6 @@ require_once '../components/header.php';
             <?php endforeach; ?>
         </tbody>
     </table>
-
-    <!-- Pagination (dummy, nanti bisa dibuat dinamis) -->
-    <div class="pagination">
-        <a href="#" class="page-btn">«</a>
-        <a href="#" class="page-btn active">1</a>
-        <a href="#" class="page-btn">2</a>
-        <a href="#" class="page-btn">3</a>
-        <a href="#" class="page-btn">»</a>
-    </div>
 
 </div>
 
