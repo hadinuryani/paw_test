@@ -31,6 +31,35 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register'])) {
             $sql_cek_email = "SELECT id_user FROM users WHERE email = :email LIMIT 1";
             if (fetchOne($sql_cek_email, [':email' => $email])) {
                 $error_email = "Email ini sudah terdaftar.";
+=======
+    // cek apakah email atau nim/nip sudah ada
+    $cek = fetchData(
+        "SELECT id_user FROM users 
+        WHERE email = :email OR nim_nip = :nim",
+        [
+        ':email' => $email,
+        ':nim'   => $nim_nip
+        ]
+    );
+
+        if(!empty($cek)) {
+            $error = 'Email atau NIM/NIP sudah terdaftar';
+        }else {
+            // hash password
+            $password_hash = password_hash($password, PASSWORD_DEFAULT);
+            // insert data
+            $insert = registerPemustaka([
+            'nama_user' => $nama,
+            'email'          => $email,
+            'nim_nip'        => $nim_nip,
+            'password'       => $password_hash
+            ]);
+
+            if ($insert) {
+                header('location: ' . BASE_URL . 'login.php?susses=Registrasi berhasil! Silakan login.');
+            } else {
+                // kasih alert 'Terjadi kesalahan saat registrasi.';
+
             }
         }
     }

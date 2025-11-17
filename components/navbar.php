@@ -9,59 +9,55 @@
         </div>
 
         <?php 
-        // Pastikan role sudah ada
+        // cek role
         $role = $_SESSION['role'] ?? null;
 
         switch($role):
         
-        /* =======================
-           MENU UNTUK PEMUSTAKA
+        /* MENU UNTUK PEMUSTAKA
         ========================*/
         case 'pemustaka': ?>
-
-            <div class="menu-item">
+            <a class="menu-item" href="<?= BASE_URL; ?>">
                 <img class="menu-icon" src="<?= BASE_URL; ?>assets/img/home.png" alt="">
-                <a href="<?= BASE_URL; ?>">Home</a>
-            </div>
+                <span>Home</span>
+            </a>
 
-            <div class="menu-item">
+            <a class="menu-item" href="<?= BASE_URL; ?>pemustaka/riwayat.php">
                 <img class="menu-icon" src="<?= BASE_URL; ?>assets/img/riwayat.png" alt="">
-                <a href="<?= BASE_URL; ?>pemustaka/riwayat.php">Riwayat Pinjam</a>
-            </div>
+                <span>Riwayat Pinjam</span>
+            </a>
 
-            <div class="menu-item">
+            <a class="menu-item" href="<?= BASE_URL; ?>pemustaka/profil.php">
                 <img class="menu-icon" src="<?= BASE_URL; ?>assets/img/profil.png" alt="">
-                <a href="<?= BASE_URL; ?>pemustaka/profil.php">Lihat Profil</a>
-            </div>
+                <span>Lihat Profil</span>
+            </a>
 
         <?php 
         break;
 
-
-        /* =====================
-            MENU UNTUK ADMIN
+        /* MENU UNTUK ADMIN
         ======================*/
         case 'admin': ?>
 
-            <div class="menu-item">
+           <a class="menu-item" href="<?= BASE_URL; ?>administrator/">
                 <img class="menu-icon" src="<?= BASE_URL; ?>assets/img/home.png" alt="">
-                <a href="<?= BASE_URL; ?>administrator/">Dashboard</a>
-            </div>
+                <span>Dashboard</span>
+            </a>
 
-            <div class="menu-item">
+            <a class="menu-item" href="<?= BASE_URL; ?>administrator/daftar_pemustaka.php">
                 <img class="menu-icon" src="<?= BASE_URL; ?>assets/img/profil.png" alt="">
-                <a href="<?= BASE_URL; ?>administrator/daftar_pemustaka.php">Daftar Pemustaka</a>
-            </div>
+                <span>Daftar Pemustaka</span>
+            </a>
 
-            <div class="menu-item">
+            <a class="menu-item" href="<?= BASE_URL; ?>administrator/kelola_buku.php">
                 <img class="menu-icon" src="<?= BASE_URL; ?>assets/img/riwayat.png" alt="">
-                <a href="<?= BASE_URL; ?>administrator/kelola_buku.php">Kelola Buku</a>
-            </div>
+                <span>Kelola Buku</span>
+            </a>
 
-            <div class="menu-item">
+            <a class="menu-item" href="<?= BASE_URL; ?>administrator/kelola_peminjaman.php">
                 <img class="menu-icon" src="<?= BASE_URL; ?>assets/img/status.png" alt="">
-                <a href="<?= BASE_URL; ?>administrator/kelola_peminjaman.php">Update Status Peminjaman</a>
-            </div>
+                <span>Update Status Peminjaman</span>
+            </a>
 
         <?php 
         break;
@@ -72,10 +68,12 @@
     </div>
 
     <!-- Logout -->
-    <div class="logout">
-        <div class="menu-item">
+    <div>
+        <a class="menu-item" href="<?= BASE_URL; ?>logout.php">
             <img class="menu-icon" src="<?= BASE_URL; ?>assets/img/logout.png" alt="">
-            <a href="<?= BASE_URL; ?>logout.php">Logout</a>
-        </div>
+            <span>Logout</span>
+        </a>
+
     </div>
+    
 </div>

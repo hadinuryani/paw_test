@@ -4,8 +4,12 @@ require_once '../config/config.php';
 require_once '../config/function.php';
 
 $data['title'] = 'Tambah Buku';
-$data['css'] = ['layout.css','admin.css',];
+$data['css'] = ['layout.css','admin.css'];
 $data['header'] ='Tambah Buku';
+if(!($_SESSION['role'] == 'admin' && $_SESSION['nama_user'])){
+    header('location: ' . BASE_URL . 'login.php');
+    exit;
+}
 require_once '../components/header.php';
 
 // proses submit form
@@ -81,13 +85,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
 ?>
 
 <div class="form-container">
-    <h2 class="form-title">Tambah Buku</h2>
 
     <?php if(!empty($error_general)): ?>
         <div class="alert alert-danger"><?= $error_general ?></div>
     <?php endif; ?>
 
-    <form action="tambah_buku.php" method="post">
+    <form action="#" method="post" class="form-edit">
 
         <div class="form-group">
             <label>Judul Buku</label>
@@ -110,7 +113,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
         <div class="form-group">
             <label>Tahun Terbit</label>
             <input type="text" name="tahun_terbit" class="form-input" value="<?= htmlspecialchars($tahun_terbit) ?>">
-            <span class="form-error"><?= $error_tahun_terbit ?></span>
+            <span class="form-error"><?= $error_tahun_terbit ?>
         </div>
 
         <div class="form-group">
@@ -124,12 +127,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
             <span class="form-error"><?= $error_kategori ?></span>
         </div>
 
-        <button type="submit" name="submit" class="btn btn-primary">
-            Simpan Buku
-        </button>
-
+        <button type="submit" name="submit" class="btn">Simpan Buku</button>
         <a href="kelola_buku.php" class="btn btn-secondary">Kembali</a>
     </form>
 </div>
 
 <?php require_once '../components/footer.php'; ?>
+
+    </form>
+    
+</div>
+
+
+<?php require_once '../components/footer.php'; ?>
+

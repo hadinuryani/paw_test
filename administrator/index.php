@@ -2,29 +2,28 @@
 session_start();
 require_once '../config/config.php';
 require_once '../config/function.php';
-
+// set data
 $data['title'] = 'Manage Books';
 $data['css'] = ['layout.css','admin.css'];
 $data['header'] = 'Manage Books';
-
-require_once '../components/header.php';
+// cek session
+if(!($_SESSION['role'] == 'admin' && $_SESSION['nama_user'])){
+    header('location: ' . BASE_URL . 'login.php');
+    exit;
+}
 
 // Ambil total buku
 $totalBooks = fetchOne("SELECT COUNT(*) AS total FROM buku");
-
-
 // Ambil pending review, jika tidak ada kolom status, buat 0 dulu
 $pending = fetchOne("SELECT COUNT(*) AS p FROM peminjaman WHERE status = 'pending'");
-
-
 // Ambil semua buku untuk tabel
 $books = fetchData("SELECT * FROM buku ORDER BY id_buku DESC");
 
+require_once '../components/header.php';
 ?>
 
 <!-- Stats Cards -->
 <div class="stats-grid">
-
     <!-- Total Books -->
     <div class="stat-card">
         <div class="stat-header">
@@ -79,14 +78,6 @@ $books = fetchData("SELECT * FROM buku ORDER BY id_buku DESC");
         </tbody>
     </table>
 
-    <!-- Pagination (Belum dibuat dinamich) -->
-    <div class="pagination">
-        <a href="#" class="page-btn">«</a>
-        <a href="#" class="page-btn active">1</a>
-        <a href="#" class="page-btn">2</a>
-        <a href="#" class="page-btn">3</a>
-        <a href="#" class="page-btn">»</a>
-    </div>
 </div>
 
 <?php require_once '../components/footer.php' ?>

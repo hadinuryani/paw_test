@@ -1,10 +1,13 @@
 <?php
 session_start();
-require_once 'config/config.php';
-require_once 'config/function.php';
+$data['title'] = 'document';
+$data['css'] = ['layout.css','book.css'];
+$data['header'] ='Categories';
+require_once '../config/config.php';
+require_once '../config/function.php';
 
-if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'pemustaka') {
-    header("Location: login.php");
+if(!($_SESSION['role'] == 'pemustaka' && $_SESSION['nama_user'])){
+    header('location: ' . BASE_URL . 'login.php');
     exit;
 }
 
@@ -25,7 +28,7 @@ $msg = "";
 $err = "";
 
 // Jika tombol PINJAM ditekan
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if (isset($_POST['pinjam'])) {
 
     // Hitung peminjaman aktif (pending + borrow)
     $count = countActiveBorrow($id_user, $id_buku);
@@ -41,30 +44,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-require_once 'components/header.php';
+require_once '../components/header.php';
 ?>
 
-<div class="book-detail">
+<section class="book-detail">
+    <!--cover -->
+    <div class="book-cover-detail">
+        <div class="title">
+            <div style="font-size: 18px; font-weight: 700; margin-bottom: 10px;">
+                <?= $buku['judul']; ?>
+            </div>
+            <div style="font-size: 12px;">
+                <?= $buku['penulis']; ?>
+            </div>
+        </div>
+    </div>
 
-    <h2><?= htmlspecialchars($buku['judul']); ?></h2>
-    <p><strong>Penulis:</strong> <?= htmlspecialchars($buku['penulis']); ?></p>
-    <p><strong>Kategori:</strong> <?= htmlspecialchars($buku['kategori']); ?></p>
-    <p><strong>Tahun Terbit:</strong> <?= htmlspecialchars($buku['tahun_terbit']); ?></p>
+    <div class="detail-info">
+        <h2><?= $buku['judul']; ?></h2>
+        <p><strong>Penulis:</strong> <?= $buku['penulis']; ?></p>
+        <p><strong>Kategori:</strong> <?= $buku['kategori']; ?></p>
+        <p><strong>Tahun Terbit:</strong> <?= $buku['tahun_terbit']; ?></p>
+        <!-- pesan saat meminjam buku -->
+        <?php if ($msg): ?>
+            <div class="alert-success"><?= $msg; ?></div>
+        <?php endif; ?>
 
-    <hr>
+        <?php if ($err): ?>
+            <div class="alert-error"><?= $err; ?></div>
+        <?php endif; ?>
 
-    <?php if ($msg): ?>
-        <div class="alert-success"><?= $msg; ?></div>
-    <?php endif; ?>
+        <form action="#" method="POST">
+            <button type="submit" name="pinjam" class="btn btn-primary">Pinjam Buku</button>
+        </form>
+    </div>
 
-    <?php if ($err): ?>
-        <div class="alert-error"><?= $err; ?></div>
-    <?php endif; ?>
+</section>
 
-    <form method="POST">
-        <button type="submit" class="btn btn-primary">PINJAM BUKU</button>
-    </form>
-
-</div>
-
-<?php require_once 'components/footer.php'; ?>
+<?php require_once '../components/footer.php'; ?>
