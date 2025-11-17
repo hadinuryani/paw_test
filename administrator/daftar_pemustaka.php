@@ -3,13 +3,14 @@ session_start();
 require_once '../config/config.php';
 require_once '../config/function.php';
 
-$data['title'] = 'document';
+$data['title'] = 'Registrasi Pemustaka';
 $data['css'] = ['layout.css','admin.css'];
 $data['header'] ='Kelola Pemustaka';
 
 $users = getAllUsers();
-
 require_once '../components/header.php';
+
+
 ?> 
 
 <div class="table-container">
