@@ -62,29 +62,47 @@ require_once '../components/header.php'
                         <span class="badge badge-warning">Pending</span>
                     <?php elseif($p['status'] == 'borrow'): ?>
                         <span class="badge badge-success">Dipinjam</span>
+                    <?php elseif($p['status'] == 'rejected'): ?>
+                        <span class="badge badge-danger">Ditolak</span>
                     <?php else: ?>
                         <span class="badge badge-secondary">Returned</span>
                     <?php endif; ?>
                 </td>
+
+
                 <td>
                     <div class="action-buttons">
                         <?php if ($p['status'] === 'pending'): ?>
+                            <!-- Terima / Approve -->
                             <form action="update_status.php" method="POST" style="display:inline;">
                                 <input type="hidden" name="id" value="<?= $p['id_peminjaman']; ?>">
                                 <input type="hidden" name="status" value="borrow">
-                                <button class="icon-btn icon-btn-edit">✔️</button>
+                                <button class="icon-btn icon-btn-approve" type="submit" title="Terima permintaan">✔️ Terima</button>
                             </form>
+
+                            <!-- Tolak / Reject -->
+                            <form action="update_status.php" method="POST" style="display:inline; margin-left:6px;">
+                                <input type="hidden" name="id" value="<?= $p['id_peminjaman']; ?>">
+                                <input type="hidden" name="status" value="rejected">
+                                <button class="icon-btn icon-btn-reject" type="submit" title="Tolak permintaan">✖️ Tolak</button>
+                            </form>
+
                         <?php elseif ($p['status'] === 'borrow'): ?>
+                            <!-- Kembalikan buku -->
                             <form action="update_status.php" method="POST" style="display:inline;">
                                 <input type="hidden" name="id" value="<?= $p['id_peminjaman']; ?>">
                                 <input type="hidden" name="status" value="returned">
-                                <button class="icon-btn icon-btn-view">↩️ </button>
+                                <button class="icon-btn icon-btn-return" type="submit" title="Tandai dikembalikan">↩️ Kembalikan</button>
                             </form>
+
+                        <?php elseif ($p['status'] === 'rejected'): ?>
+                            <span class="badge badge-danger">Ditolak</span>
                         <?php else: ?>
                             <span class="badge badge-secondary">Selesai</span>
                         <?php endif; ?>
                     </div>
                 </td>
+
             </tr>
             <?php endforeach; ?>
         </tbody>

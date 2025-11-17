@@ -33,8 +33,8 @@ if (isset($_POST['pinjam'])) {
     // Hitung peminjaman aktif (pending + borrow)
     $count = countActiveBorrow($id_user, $id_buku);
 
-    if ($count >= 2) {
-        $err = "Anda sudah meminjam buku ini 2 kali dan belum mengembalikannya.";
+    if ($count >= 1) {
+        $err = "Anda sudah meminjam buku ini dan belum mengembalikannya.";
     } else {
         if (createBorrow($id_user, $id_buku)) {
             $msg = "Peminjaman berhasil! Menunggu persetujuan admin.";

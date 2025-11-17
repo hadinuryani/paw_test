@@ -1,7 +1,7 @@
 <?php 
 session_start();
 $data['title'] = 'document';
-$data['css'] = ['layout.css','admin.css']; // manggil admin css karena butuh style table
+$data['css'] = ['layout.css','admin.css']; 
 $data['header'] ='Categories';
 
 if(!($_SESSION['role'] == 'pemustaka' && $_SESSION['nama_user'])){
@@ -29,7 +29,6 @@ $stmt = DBH->prepare($sql);
 $stmt->execute([$id_pemustaka]);
 $riwayat = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-
 require_once '../components/header.php';
 ?>
 
@@ -54,19 +53,31 @@ require_once '../components/header.php';
                     <td><?= $row['judul']; ?></td>
                     <td><?= $row['tanggal_peminjaman']; ?></td>
                     <td><?= $row['tanggal_kembali'] ?: '-'; ?></td>
+
+                    <!-- BADGE STATUS -->
                     <td>
-                        <span class="badge  <?= $row['status'] == 'pending' ? 'badge-danger' : ($row['status'] == 'returned' ? 'badge-success' : 'badge-warning'); ?>">
-                            <?= $row['status']; ?>
+                        <span class="badge 
+                            <?php 
+                                if ($row['status'] == 'pending') echo 'badge-warning';
+                                else if ($row['status'] == 'borrow') echo 'badge-primary';
+                                else if ($row['status'] == 'returned') echo 'badge-success';
+                                else if ($row['status'] == 'rejected') echo 'badge-danger';
+                            ?>">
+                            <?= ucfirst($row['status']); ?>
                         </span>
                     </td>
+
                     <!-- AKSI -->
                     <td>
-                        <?php if ($row['status'] === 'borrow'): ?>
-                            <a href="kembalikan_buku.php?id=<?= $row['id_peminjaman']; ?>" class="menu-item">↩️</a>
+                        <?php if ($row['status'] == 'borrow'): ?>
+                            <a href="kembalikan_buku.php?id=<?= $row['id_peminjaman']; ?>" class="menu-item">
+                                Kembalikan Buku
+                            </a>
                         <?php else: ?>
                             -
                         <?php endif; ?>
                     </td>
+
                 </tr>
             <?php endforeach; ?>
         <?php else: ?>
@@ -77,7 +88,6 @@ require_once '../components/header.php';
         </tbody>
 
     </table>
-
 </div>
 
-<?php require_once '../components/footer.php' ?>
+<?php require_once '../components/footer.php'; ?>

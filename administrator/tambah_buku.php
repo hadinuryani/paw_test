@@ -6,10 +6,12 @@ require_once '../config/function.php';
 $data['title'] = 'Tambah Buku';
 $data['css'] = ['layout.css','admin.css'];
 $data['header'] ='Tambah Buku';
+
 if(!($_SESSION['role'] == 'admin' && $_SESSION['nama_user'])){
     header('location: ' . BASE_URL . 'login.php');
     exit;
 }
+
 require_once '../components/header.php';
 
 // proses submit form
@@ -18,6 +20,7 @@ $error_judul = $error_penulis = $error_penerbit = $error_tahun_terbit = $error_k
 $error_general = '';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
+
     // Validasi Judul
     if (!wajib_isi($_POST['judul'])) {
         $error_judul = "Judul buku wajib diisi.";
@@ -64,8 +67,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
     } else {
         $kategori = test_input($_POST['kategori']);
     }
+
     // DATA UNTUK INSERT
     if (empty($error_judul) && empty($error_penulis) && empty($error_penerbit) && empty($error_tahun_terbit) && empty($error_kategori)) {
+
         $dataInsert = [
             'judul'        => $judul,
             'penulis'      => $penulis,
@@ -113,31 +118,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
         <div class="form-group">
             <label>Tahun Terbit</label>
             <input type="text" name="tahun_terbit" class="form-input" value="<?= htmlspecialchars($tahun_terbit) ?>">
-            <span class="form-error"><?= $error_tahun_terbit ?>
+            <span class="form-error"><?= $error_tahun_terbit ?></span>
         </div>
 
         <div class="form-group">
             <label>Kategori</label>
             <select name="kategori" class="form-input">
                 <option value="">-- Pilih Kategori --</option>
-                <option value="umum" <?= ($kategori == 'umum') ? 'selected' : '' ?>>Umum</option>
+                <option value="umum"   <?= ($kategori == 'umum') ? 'selected' : '' ?>>Umum</option>
                 <option value="jurnal" <?= ($kategori == 'jurnal') ? 'selected' : '' ?>>Jurnal</option>
-                <option value="skripsi" <?= ($kategori == 'skripsi') ? 'selected' : '' ?>>Skripsi</option>
+                <option value="skripsi"<?= ($kategori == 'skripsi') ? 'selected' : '' ?>>Skripsi</option>
             </select>
             <span class="form-error"><?= $error_kategori ?></span>
         </div>
 
         <button type="submit" name="submit" class="btn">Simpan Buku</button>
         <a href="kelola_buku.php" class="btn btn-secondary">Kembali</a>
+
     </form>
+
 </div>
 
 <?php require_once '../components/footer.php'; ?>
-
-    </form>
-    
-</div>
-
-
-<?php require_once '../components/footer.php'; ?>
-

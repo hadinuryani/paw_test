@@ -154,8 +154,7 @@ function createBorrow($id_user, $id_buku) {
 }
 
 
-/* ======================
-   VALIDASI FORM
+/*  VALIDASI FORM
    ======================*/
 
 // Untuk Membersihkan spasi, backslash, dan tag HTML
@@ -276,6 +275,16 @@ function updateProfilPemustaka(int $id_pemustaka, array $data, ?array $file = nu
         ':id'     => $id_pemustaka
     ]);
 }
+// ambil status peminjaman
+function getStatusPeminjaman($id) {
+    $result = fetchOne(
+        "SELECT status FROM peminjaman WHERE id_peminjaman = :id",
+        ['id' => $id]
+    );
+
+    return $result['status'] ?? null;
+}
+
 
 
 

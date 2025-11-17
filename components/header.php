@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -28,7 +28,7 @@
                 <?php endif; ?>
                 <div class="user-section">
                     <div class="user-profile">
-                        <img src="<?= BASE_URL; ?>assets/img/<?= $_SESSION['profil'] ?? 'users.png'; ?>" class="user-avatar">
+                        <img src="<?= BASE_URL; ?>assets/img/<?= $_SESSION['profil'] ?? 'users.png'; ?>" class="user-avatar" alt="Foto Profil <?= $_SESSION['nama_user']; ?>">
                         <span><?= $_SESSION['nama_user']; ?></span>
                     </div>
                 </div>

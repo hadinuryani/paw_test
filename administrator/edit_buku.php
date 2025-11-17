@@ -77,7 +77,7 @@ require_once '../components/header.php';
 
     <div>
         <label>Kategori</label>
-        <select name="kategori" required>
+        <select name="kategori">
             <option value="umum"     <?= $buku['kategori']=='umum'?'selected':'' ?>>Umum</option>
             <option value="jurnal"   <?= $buku['kategori']=='jurnal'?'selected':'' ?>>Jurnal</option>
             <option value="skripsi"  <?= $buku['kategori']=='skripsi'?'selected':'' ?>>Skripsi</option>

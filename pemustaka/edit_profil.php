@@ -29,6 +29,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $isUpdated = updateProfilPemustaka($id_pemustaka, $dataPost, $_FILES['profil'] ?? null);
 
     if ($isUpdated) {
+        // Ambil ulang data pengguna yang sudah diperbarui
+        $userBaru = getProfilPemustaka($id_pemustaka);
+
+        // Update seluruh session
+        $_SESSION['nama_user'] = $userBaru['nama_user'];
+        $_SESSION['email']     = $userBaru['email'];
+        $_SESSION['nim_nip']   = $userBaru['nim_nip'];
+        $_SESSION['profil']    = $userBaru['profil'];
+
         header("Location: profil.php?success=1");
         exit;
     } else {

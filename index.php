@@ -71,8 +71,8 @@ require_once 'components/header.php';
 
             <!-- tombol detail (SVG) -->
             <div class="btn-book">
-                <a class="detail-link" href="<?= BASE_URL; ?>pemustaka/detail_buku.php?id=<?= $b['id_buku']; ?>" aria-label="Lihat detail">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="#1f2937" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <a title="Lihat Detail Buku" class="detail-link" href="<?= BASE_URL; ?>pemustaka/detail_buku.php?id=<?= $b['id_buku']; ?>" aria-label="Lihat detail">
+                    <svg  viewBox="0 0 24 24" fill="none" stroke="#1f2937" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
                         <path d="M4 4v15.5" />
                         <path d="M6.5 2H20v15H6.5A2.5 2.5 0 0 1 4 14.5V4z" />

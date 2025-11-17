@@ -2,124 +2,136 @@
 session_start();
 require_once 'config/config.php';
 require_once 'config/function.php';
+// Cek jika user sudah login
+if (isset($_SESSION['user_id']) && isset($_SESSION['role'])) {
+    // Jika admin lempar ke dashboard admin
+    if ($_SESSION['role'] == 'admin') {
+        header("Location: " . BASE_URL . "admin/dashboard.php");
+        exit;
+    }
+    // Jika pemustaka lempar ke dashboard user
+    if ($_SESSION['role'] == 'pemustaka') {
+        header("Location: " . BASE_URL . "index.php");
+        exit;
+    }
+}
 
-// Inisialisasi semua variabel & variabel error
+
+// Inisialisasi variabel
 $nama = $email = $nim_nip = $password = $confirm_password = '';
 $error_nama = $error_email = $error_nim_nip = $error_password = $error_confirm_password = '';
 $error_general = ''; 
 
-// Proses jika form di submit
+// Jika tombol register ditekan
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register'])) {
-    // Validasi Nama
+
+    // -------------------------
+    // VALIDASI NAMA
+    // -------------------------
     if (!wajib_isi($_POST['nama'])) {
         $error_nama = "Nama lengkap wajib diisi.";
     } else {
-        $nama = test_input($_POST['nama']); 
-        if (!alfabet($nama)) { 
+        $nama = test_input($_POST['nama']);
+        if (!alfabet($nama)) {
             $error_nama = "Nama hanya boleh berisi huruf dan spasi.";
         }
     }
 
-    // Validasi Email
-    if (!wajib_isi($_POST['email'])) {
-        $error_email = "Email wajib diisi.";
-    } else {
-        $email = test_input($_POST['email']);
-        if (!cek_format_email($email)) { 
-            $error_email = "Format email tidak valid.";
-        } else {
-            $sql_cek_email = "SELECT id_user FROM users WHERE email = :email LIMIT 1";
-            if (fetchOne($sql_cek_email, [':email' => $email])) {
-                $error_email = "Email ini sudah terdaftar.";
-=======
-    // cek apakah email atau nim/nip sudah ada
-    $cek = fetchData(
-        "SELECT id_user FROM users 
-        WHERE email = :email OR nim_nip = :nim",
-        [
-        ':email' => $email,
-        ':nim'   => $nim_nip
-        ]
-    );
-
-        if(!empty($cek)) {
-            $error = 'Email atau NIM/NIP sudah terdaftar';
-        }else {
-            // hash password
-            $password_hash = password_hash($password, PASSWORD_DEFAULT);
-            // insert data
-            $insert = registerPemustaka([
-            'nama_user' => $nama,
-            'email'          => $email,
-            'nim_nip'        => $nim_nip,
-            'password'       => $password_hash
-            ]);
-
-            if ($insert) {
-                header('location: ' . BASE_URL . 'login.php?susses=Registrasi berhasil! Silakan login.');
-            } else {
-                // kasih alert 'Terjadi kesalahan saat registrasi.';
-
-            }
-        }
-    }
-
-    // Validasi NIM/NIP
+    // -------------------------
+    // VALIDASI NIM/NIP
+    // -------------------------
     if (!wajib_isi($_POST['nim_nip'])) {
         $error_nim_nip = "NIM/NIP wajib diisi.";
     } else {
         $nim_nip = test_input($_POST['nim_nip']);
-        if (!cek_format_identitas($nim_nip)) { 
+        if (!cek_format_identitas($nim_nip)) {
             $error_nim_nip = "NIM/NIP tidak valid. Harus 12 digit (NIM) atau 18 digit (NIP).";
-        } else {
-            $sql_cek_nim = "SELECT id_user FROM users WHERE nim_nip = :nim LIMIT 1";
-            if (fetchOne($sql_cek_nim, [':nim' => $nim_nip])) {
-                $error_nim_nip = "NIM/NIP ini sudah terdaftar.";
-            }
         }
     }
 
-    // Validasi password minimal panjang
-    $password = $_POST['password']; 
-    $confirm_password = $_POST['confirm_password']; 
+    // -------------------------
+    // VALIDASI EMAIL
+    // -------------------------
+    if (!wajib_isi($_POST['email'])) {
+        $error_email = "Email wajib diisi.";
+    } else {
+        $email = test_input($_POST['email']);
+        if (!cek_format_email($email)) {
+            $error_email = "Format email tidak valid.";
+        }
+    }
+
+    // -------------------------
+    // VALIDASI PASSWORD
+    // -------------------------
+    $password = $_POST['password'];
+    $confirm_password = $_POST['confirm_password'];
+
     if (!wajib_isi($password)) {
         $error_password = "Password wajib diisi.";
     } else {
-        if (!cek_panjang_minimal($password, 6)) { // <== Menggunakan cek_panjang_minimal()
+        if (!cek_panjang_minimal($password, 6)) {
             $error_password = "Password minimal harus 6 karakter.";
         }
     }
 
-    // Validasi kesamaan password
+    // Validasi Konfirmasi Password
     if (!wajib_isi($confirm_password)) {
         $error_confirm_password = "Konfirmasi password wajib diisi.";
     } else {
-        if (!cek_kesamaan_password($password, $confirm_password)) { 
+        if (!cek_kesamaan_password($password, $confirm_password)) {
             $error_confirm_password = "Password dan konfirmasi tidak cocok.";
         }
     }
 
-    // DATA UNTUK INSERT
-    if (empty($error_nama) && empty($error_email) && empty($error_nim_nip) && empty($error_password) && empty($error_confirm_password)) {
-        // Encrypt password 
-        $password_hash = password_hash($password, PASSWORD_DEFAULT);
+    // -------------------------
+    // JIKA SEMUA VALIDASI LULUS
+    // -------------------------
+    if (
+        empty($error_nama) &&
+        empty($error_email) &&
+        empty($error_nim_nip) &&
+        empty($error_password) &&
+        empty($error_confirm_password)
+    ) {
 
-        $dataInsert = [
-            'nama_user' => $nama,
-            'email'     => $email,
-            'nim_nip'   => $nim_nip,
-            'password'  => $password_hash
-        ];
+        // CEK DUPLIKASI EMAIL ATAU NIM
+        $cek = fetchOne(
+            "SELECT id_user FROM users 
+             WHERE email = :email OR nim_nip = :nim LIMIT 1",
+            [
+                ':email' => $email,
+                ':nim'   => $nim_nip
+            ]
+        );
 
-        if (registerPemustaka($dataInsert)) {
-            header('location: ' . BASE_URL . 'login.php?status=sukses_registrasi');
-            exit;
-        } else { 
-            $error_general = "Registrasi gagal, terjadi masalah pada sistem.";
+        if ($cek) {
+            $error_general = "Email atau NIM/NIP sudah terdaftar.";
+        } else {
+
+            // HASH PASSWORD
+            $password_hash = password_hash($password, PASSWORD_DEFAULT);
+
+            // DATA UNTUK INSERT
+            $dataInsert = [
+                'nama_user' => $nama,
+                'email'     => $email,
+                'nim_nip'   => $nim_nip,
+                'password'  => $password_hash
+            ];
+
+            // INSERT DATA
+            if (registerPemustaka($dataInsert)) {
+                header('Location: ' . BASE_URL . 'login.php?status=sukses_registrasi');
+                exit;
+            } else {
+                $error_general = "Registrasi gagal, terjadi kesalahan sistem.";
+            }
         }
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -145,7 +157,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register'])) {
         <div class="auth-right">
             <div class="auth-header">
                 <h1 class="auth-title">Register</h1>
-                <p class="auth-subtitle">Sudah Punya akun ? <a href="<?= BASE_URL; ?>login.php">Sign in</a></p>
+                <p class="auth-subtitle">Sudah Punya akun ? <a href="<?= BASE_URL; ?>login.php">Login</a></p>
             </div>
 
             <?php if(!empty($error_general)): ?>
@@ -167,7 +179,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register'])) {
 
                 <div class="form-group">
                     <label class="form-label">Email</label>
-                    <input type="text" name="email" class="form-input" placeholder="masukan email anda"value="<?= htmlspecialchars($email) ?>">
+                    <input type="text" name="email" class="form-input" placeholder="masukan email anda" value="<?= htmlspecialchars($email) ?>">
                     <span class="form-error"><?= $error_email ?></span>
                 </div>
 

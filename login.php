@@ -2,6 +2,19 @@
 session_start();
 require_once 'config/config.php';
 require_once 'config/function.php';
+// Cek jika user sudah login
+if (isset($_SESSION['user_id']) && isset($_SESSION['role'])) {
+    // Jika admin  lempar ke dashboard admin
+    if ($_SESSION['role'] == 'admin') {
+        header("Location: " . BASE_URL . "admin/dashboard.php");
+        exit;
+    }
+    // Jika pemustaka lempar ke dashboard user
+    if ($_SESSION['role'] == 'pemustaka') {
+        header("Location: " . BASE_URL . "index.php");
+        exit;
+    }
+}
 
 // Inisialisasi variabel
 $identity = $password = '';
@@ -77,11 +90,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
         <div class="auth-right">
             <div class="auth-header">
                 <h1 class="auth-title">Welcome Back!</h1>
-                <p class="auth-subtitle">Belum punya akun? <a href="<?= BASE_URL; ?>register.php">Sign up</a></p>
+                <p class="auth-subtitle">Belum punya akun? <a href="<?= BASE_URL; ?>register.php">Register</a></p>
             </div>
 
              <?php if(!empty($error_general)): ?>
-            <div class="alert alert-danger"><?= $error_general ?></div>
+            <div class="form-error"><?= $error_general ?></div>
             <?php endif; ?>
 
             <form action="login.php" method="post">

@@ -216,7 +216,14 @@ body {
     padding: 0 16px;
 }
 
-
+/* form error */
+.form-error {
+    color: #ef4444; 
+    font-size: 14px;
+    font-weight: 500;
+    display: block;
+    margin-top: 6px; 
+}
 
 
 .name-row {
