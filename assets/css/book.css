@@ -42,61 +42,50 @@
     cursor: pointer;
     transition: transform 0.3s;
     background-color: rgb(213, 239, 253);
-    padding: 10px;
-    border-radius: 10px;
+    padding: 12px;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 .book-card:hover {
     transform: translateY(-4px);
 }
 
+/* Cover buku */
 .book-cover {
     width: 100%;
     aspect-ratio: 2/3;
     border-radius: 12px;
-    margin-bottom: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     overflow: hidden;
-    position: relative;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    position: relative;
 }
 
-
-.book-cover .title{
+/* TITLE dalam cover */
+.book-cover .title {
     display: flex;
     flex-direction: column;
-    align-items: center;
     justify-content: center;
-    height: 100%;
-}
-.book-card .btn-book{
-    display: flex;
-    justify-content: space-between;
     align-items: center;
-}
-.book-card .btn-book img{
-    width: 30px;
-}
-
-.book-card .btn-book img:hover{
-    width: 35px;
-}
-
-.buku-empty {
-    font-weight: 500;
-    margin-top: 20% ;
+    height: 100%;
     padding: 10px;
-    border-radius: 10px;
-    box-shadow: 2px 2px 5px rgb(206, 206, 206);
     text-align: center;
-    background-color: rgb(206, 206, 206);
+}
+
+/* Info buku */
+.book-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 }
 
 .book-title {
     font-size: 14px;
     font-weight: 600;
     color: #111827;
-    margin-bottom: 4px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -107,14 +96,24 @@
     color: #6b7280;
 }
 
-
-.featured-book {
-    background: white;
-    border-radius: 16px;
-    padding: 30px;
-    margin-bottom: 30px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+/* Tombol detail */
+.btn-book {
+    margin-top: auto;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
 }
+
+.btn-book svg {
+    width: 28px;
+    height: 28px;
+    transition: 0.2s;
+}
+
+.btn-book svg:hover {
+    transform: scale(1.15);
+}
+
 
 /* halaman detail buku */
 .book-detail{
