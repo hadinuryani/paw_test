@@ -14,6 +14,8 @@ if(!($_SESSION['role'] == 'admin' && $_SESSION['nama_user'])){
 
 $users = getAllUsers();
 require_once '../components/header.php';
+
+
 ?> 
 
 <div class="table-container">

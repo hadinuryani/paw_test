@@ -153,6 +153,63 @@ function createBorrow($id_user, $id_buku) {
     ]);
 }
 
+
+/* ======================
+   VALIDASI FORM
+   ======================*/
+
+// Untuk Membersihkan spasi, backslash, dan tag HTML
+function test_input($data) {
+    $data = trim($data);
+    $data = stripslashes($data);
+    $data = htmlspecialchars($data);
+    return $data;
+}
+// Masukan Wajib Isi
+function wajib_isi($data){
+    return !empty($data);
+}
+
+// Untuk nama penulis, nama pemustaka
+function alfabet($data) {
+    return preg_match("/^[a-zA-Z\s',.]+$/", $data);
+}
+
+// Untuk judul buku, penerbit, kategori
+function alfanumerik($data) {
+    return preg_match("/^[a-zA-Z0-9\s,.:()'&\-\/]+$/", $data);
+}
+
+// Untuk NIM/NIP, Tahun, dll.
+function numerik($data) {
+    return preg_match("/^[0-9]+$/", $data);
+}
+
+// Panjang minimal untuk password 
+function cek_panjang_minimal($data, $min_len) {
+    return strlen($data) >= $min_len;
+}
+
+// Untuk tahun terbit (4), NIM (12), dan NIP (18)
+function cek_panjang_tepat($data, $panjang_tepat) {
+	return (preg_match("/^[0-9]+$/", $data) && strlen($data) == $panjang_tepat);
+}
+
+// Untuk email
+function cek_format_email($data) {
+    return filter_var($data, FILTER_VALIDATE_EMAIL);
+}
+
+ // Untuk cek apakah NIM (numerik AND panjang 12) ATAU NIP(numerik AND panjang 18)
+function cek_format_identitas($data) {
+    return cek_panjang_tepat($data, 12) || cek_panjang_tepat($data, 18);
+}
+
+// Untuk Konfirmasi Password
+function cek_kesamaan_password($pass1, $pass2) {
+    return $pass1 === $pass2;
+}
+
 function updateStatusPeminjaman(int $id_peminjaman, string $status) {
     // Jika user mengembalikan buku
     if ($status === 'returned') {
@@ -219,6 +276,7 @@ function updateProfilPemustaka(int $id_pemustaka, array $data, ?array $file = nu
         ':id'     => $id_pemustaka
     ]);
 }
+
 
 
 

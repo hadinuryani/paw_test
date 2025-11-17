@@ -3,33 +3,51 @@ session_start();
 require_once 'config/config.php';
 require_once 'config/function.php';
 
-if (isset($_POST['login'])) {
-    // lakukan validasi dulu baru login;
-    $identity = trim($_POST['identity']);
+// Inisialisasi variabel
+$identity = $password = '';
+$error_identity = $error_password = $error_general = '';
+
+// proses jika form disubmit
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
+    $identity = $_POST['identity'];
     $password = $_POST['password'];
-    $user = login($identity, $password);
-    if ($user === false) {
-        $error = "Identitas atau password salah";
-    } else {
-        // cek role
-        if($user['role']  == 'pemustaka'){
-            // Set session
-            $_SESSION['user_id']  = $user['id_user'];
-            $_SESSION['nama_user'] = $user['nama_user'];
-            $_SESSION['role'] = $user['role'];
-            $_SESSION['profil'] = $user['profil'];
-            // Redirect ke homepage pemustaka
-            header('location: ' . BASE_URL . 'index.php');
-            exit;
-        }elseif($user['role'] == 'admin'){
-            // Set session
-            $_SESSION['user_id']  = $user['id_user'];
-            $_SESSION['nama_user'] = $user['nama_user'];
-            $_SESSION['role'] = $user['role'];
-            $_SESSION['profil'] = $user['profil'];
-            // Redirect ke dashboard admin
-            header('location: ' . BASE_URL . 'administrator/index.php');
-            exit;
+
+    // Validasi (Email/NIM/NIP)
+    if (!wajib_isi($identity)) {
+        $error_identity = "Email atau NIM/NIP wajib diisi.";
+    }
+
+    // Validasi Password
+    if (!wajib_isi($password)) {
+        $error_password = "Password wajib diisi.";
+    }
+
+    // PROSES LOGIN (Hanya jika validasi dasar lolos)
+    if (empty($error_identity) && empty($error_password)) {
+        $identity_clean = test_input($identity); 
+        $user = login($identity_clean, $password);
+
+        if ($user === false) {
+            // Jika login gagal (data tidak cocok)
+            $error_general = "Identitas atau password salah.";
+        } else {
+            // Jika login berhasil
+            // Cek role (Logika Anda di sini sudah benar)
+            if($user['role']  == 'pemustaka'){
+                $_SESSION['user_id']   = $user['id_user'];
+                $_SESSION['nama_user'] = $user['nama_user'];
+                $_SESSION['role']      = $user['role'];
+                $_SESSION['profil']    = $user['profil'];
+                header('location: ' . BASE_URL . 'index.php');
+                exit;
+            } elseif($user['role'] == 'admin'){
+                $_SESSION['user_id']   = $user['id_user'];
+                $_SESSION['nama_user'] = $user['nama_user'];
+                $_SESSION['role']      = $user['role'];
+                $_SESSION['profil']    = $user['profil'];
+                header('location: ' . BASE_URL . 'administrator/index.php');
+                exit;
+            }
         }
     }
 }
@@ -59,17 +77,23 @@ if (isset($_POST['login'])) {
         <div class="auth-right">
             <div class="auth-header">
                 <h1 class="auth-title">Welcome Back!</h1>
-                <p class="auth-subtitle">Don't have an account? <a href="<?= BASE_URL; ?>register.php">Sign up</a></p>
+                <p class="auth-subtitle">Belum punya akun? <a href="<?= BASE_URL; ?>register.php">Sign up</a></p>
             </div>
 
-            <form action="#" method="post">
+             <?php if(!empty($error_general)): ?>
+            <div class="alert alert-danger"><?= $error_general ?></div>
+            <?php endif; ?>
+
+            <form action="login.php" method="post">
                 <div class="form-group">
-                    <label class="form-label">Email Address</label>
-                    <input type="text" class="form-input" name="identity" placeholder="Enter your email" required>
+                    <label class="form-label">Identitas (Email atau NIM/NIP)</label>
+                    <input type="text" class="form-input" name="identity" placeholder="Masukkan email atau NIM/NIP" value="<?= htmlspecialchars($identity) ?>">
+                    <span class="form-error"><?= $error_identity ?></span>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Password</label>
-                    <input type="password" name="password" class="form-input" placeholder="Enter your password" required>
+                    <input type="password" name="password" class="form-input" placeholder="Masukkan password">
+                    <span class="form-error"><?= $error_password ?></span>
                 </div>
                 <button type="submit" name="login" class="submit-btn">Login</button>
             </form>
