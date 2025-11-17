@@ -3,7 +3,7 @@ session_start();
 require_once '../config/config.php';
 require_once '../config/function.php';
 // set data
-$data['title'] = 'Confirmasi';
+$data['title'] = 'konfirmasi';
 $data['css'] = ['layout.css','admin.css','alert.css'];
 $data['header'] ='Confirmasi Delete';
 // cek session

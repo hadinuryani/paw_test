@@ -2,7 +2,7 @@
 session_start();
 require_once '../config/config.php';
 require_once '../config/function.php';
-$data['title'] = 'document';
+$data['title'] = 'kelola peminjaman';
 $data['css'] = ['layout.css','admin.css','alert.css'];
 $data['header'] ='Kelola Peminjaman';
 if(!($_SESSION['role'] == 'admin' && $_SESSION['nama_user'])){
