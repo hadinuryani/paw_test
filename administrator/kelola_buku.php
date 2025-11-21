@@ -2,9 +2,11 @@
 session_start();
 require_once '../config/config.php';
 require_once '../config/function.php';
+// set data
 $data['title'] = 'Kelola Buku';
 $data['css'] = ['layout.css','admin.css','alert.css'];
 $data['header'] ='Kelola Buku';
+// cek session
 if(!($_SESSION['role'] == 'admin' && $_SESSION['nama_user'])){
     header('location: ' . BASE_URL . 'login.php');
     exit;
@@ -35,7 +37,7 @@ require_once '../components/header.php'
 
 <div class="table-header">
     <h3 class="table-title">All Books (<?= $totalBooks['total']; ?>)</h3>
-    <a href="<?= BASE_URL; ?>administrator/tambah_buku.php" class="btn btn-secondary">
+    <a href="<?= BASE_URL; ?>administrator/tambah_buku.php" class="btn btn-secondary" >
         <span>📤</span> Tambah
     </a>
 </div>
@@ -69,10 +71,10 @@ require_once '../components/header.php'
                             <td><?= $b['kategori']; ?></td>
                             <td>
                                 <div class="action-buttons">
-                                    <a href="edit_buku.php?id=<?= $b['id_buku'] ?>" class="icon-btn icon-btn-edit">✏️</a>
+                                    <a href="edit_buku.php?id=<?= $b['id_buku'] ?>" class="icon-btn icon-btn-edit" title="edit buku">✏️</a>
                                     <form action="confirm_delete.php" method="POST" style="display:inline;">
                                         <input type="hidden" name="id_buku" value="<?= $b['id_buku']; ?>">
-                                        <button type="submit" class="icon-btn icon-btn-delete">🗑️</button>
+                                        <button type="submit" class="icon-btn icon-btn-delete" title="delete buku">🗑️</button>
                                     </form>
                                 </div>
                             </td>

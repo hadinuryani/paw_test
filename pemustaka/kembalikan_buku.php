@@ -2,7 +2,7 @@
 session_start();
 require_once '../config/config.php';
 require_once '../config/function.php';
-
+// cek session
 if(!($_SESSION['role'] == 'pemustaka' && $_SESSION['nama_user'])){
     header('location: ' . BASE_URL . 'login.php');
     exit;

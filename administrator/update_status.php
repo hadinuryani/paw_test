@@ -2,7 +2,7 @@
 session_start();
 require_once '../config/config.php';
 require_once '../config/function.php';
-
+// cek session
 if (!($_SESSION['role'] == 'admin' && $_SESSION['nama_user'])) {
     header('location: ' . BASE_URL . 'login.php');
     exit;
@@ -16,7 +16,7 @@ if (!$id_peminjaman || !$new_status) {
 }
 
 // Ambil status saat ini
-$current = getStatusPeminjaman($id_peminjaman); // ← bikin di function.php
+$current = getStatusPeminjaman($id_peminjaman); 
 
 if (!$current) {
     header('location: ' . BASE_URL . 'administrator/kelola_peminjaman.php?error=Data tidak ditemukan!');

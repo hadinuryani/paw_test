@@ -2,11 +2,12 @@
 session_start();
 require_once '../config/config.php';
 require_once '../config/function.php';
+
 // set data
 $data['title'] = 'Edit Buku';
 $data['css'] = ['layout.css','admin.css'];
 $data['header'] = 'Edit Buku';
-// cek session
+
 if(!($_SESSION['role'] == 'admin' && $_SESSION['nama_user'])){
     header('location: ' . BASE_URL . 'login.php');
     exit;
@@ -26,21 +27,83 @@ if (!$buku) {
     exit;
 }
 
-if (isset($_POST['submit'])) {
-    
-    $dataUpdate = [
-        'judul'        => $_POST['judul'],
-        'penulis'      => $_POST['penulis'],
-        'penerbit'     => $_POST['penerbit'],
-        'tahun_terbit' => $_POST['tahun_terbit'],
-        'kategori'     => $_POST['kategori'],
-    ];
-    
-    if (updateBook($id_buku, $dataUpdate)) {
-        header("Location: kelola_buku.php?update_success=1");
-        exit;
+// --- Variabel form ---
+$judul = $buku['judul'];
+$penulis = $buku['penulis'];
+$penerbit = $buku['penerbit'];
+$tahun_terbit = $buku['tahun_terbit'];
+$kategori = $buku['kategori'];
+
+$error_judul = $error_penulis = $error_penerbit = $error_tahun_terbit = $error_kategori = '';
+$error_general = '';
+
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
+
+    // Validasi Judul
+    if (!wajib_isi($_POST['judul'])) {
+        $error_judul = "Judul buku wajib diisi.";
     } else {
-        $error = "Gagal memperbarui buku.";
+        $judul = test_input($_POST['judul']);
+        if (!alfanumerik($judul)) {
+            $error_judul = "Judul mengandung karakter yang tidak valid.";
+        }
+    }
+
+    // Validasi Penulis
+    if (!wajib_isi($_POST['penulis'])) {
+        $error_penulis = "Nama penulis wajib diisi.";
+    } else {
+        $penulis = test_input($_POST['penulis']);
+        if (!alfabet($penulis)) {
+            $error_penulis = "Nama penulis hanya boleh berisi huruf dan spasi.";
+        }
+    }
+
+    // Validasi Penerbit
+    if (!wajib_isi($_POST['penerbit'])) {
+        $error_penerbit = "Penerbit wajib diisi.";
+    } else {
+        $penerbit = test_input($_POST['penerbit']);
+        if (!alfanumerik($penerbit)) {
+            $error_penerbit = "Penerbit hanya boleh berisi huruf, angka dan spasi.";
+        }
+    }
+
+    // Validasi Tahun Terbit
+    if (!wajib_isi($_POST['tahun_terbit'])) {
+        $error_tahun_terbit = "Tahun terbit wajib diisi.";
+    } else {
+        $tahun_terbit = test_input($_POST['tahun_terbit']);
+        if (!cek_panjang_tepat($tahun_terbit, 4)) {
+            $error_tahun_terbit = "Tahun terbit harus 4 digit angka.";
+        }
+    }
+
+    // Validasi Kategori
+    if (!wajib_isi($_POST['kategori'])) {
+        $error_kategori = "Kategori wajib dipilih.";
+    } else {
+        $kategori = test_input($_POST['kategori']);
+    }
+
+    // Jika semua valid
+    if (empty($error_judul) && empty($error_penulis) && empty($error_penerbit) &&
+        empty($error_tahun_terbit) && empty($error_kategori)) {
+
+        $dataUpdate = [
+            'judul'        => $judul,
+            'penulis'      => $penulis,
+            'penerbit'     => $penerbit,
+            'tahun_terbit' => $tahun_terbit,
+            'kategori'     => $kategori,
+        ];
+
+        if (updateBook($id_buku, $dataUpdate)) {
+            header("Location: kelola_buku.php?success=buku $judul berhasil di update");
+            exit;
+        } else {
+            $error_general = "Gagal memperbarui buku.";
+        }
     }
 }
 
@@ -49,45 +112,55 @@ require_once '../components/header.php';
 
 <div class="form-container">
 
-    <?php if (isset($error)): ?>
-        <div class="alert alert-danger"><?= $error ?></div>
+    <?php if (!empty($error_general)): ?>
+        <div class="alert alert-danger"><?= $error_general ?></div>
     <?php endif; ?>
 
     <form action="#" method="post" class="form-edit">
 
-    <div>
-        <label>Judul Buku</label>
-        <input type="text" name="judul" value="<?= htmlspecialchars($buku['judul']) ?>" required>
-    </div>
+        <div class="form-group">
+            <label>Judul Buku</label>
+            <input type="text" name="judul" class="form-input"
+                   value="<?= htmlspecialchars($judul) ?>">
+            <span class="form-error"><?= $error_judul ?></span>
+        </div>
 
-    <div>
-        <label>Penulis</label>
-        <input type="text" name="penulis" value="<?= htmlspecialchars($buku['penulis']) ?>" required>
-    </div>
+        <div class="form-group">
+            <label>Penulis</label>
+            <input type="text" name="penulis" class="form-input"
+                   value="<?= htmlspecialchars($penulis) ?>">
+            <span class="form-error"><?= $error_penulis ?></span>
+        </div>
 
-    <div>
-        <label>Penerbit</label>
-        <input type="text" name="penerbit" value="<?= htmlspecialchars($buku['penerbit']) ?>" required>
-    </div>
+        <div class="form-group">
+            <label>Penerbit</label>
+            <input type="text" name="penerbit" class="form-input"
+                   value="<?= htmlspecialchars($penerbit) ?>">
+            <span class="form-error"><?= $error_penerbit ?></span>
+        </div>
 
-    <div>
-        <label>Tahun Terbit</label>
-        <input type="text" name="tahun_terbit" value="<?= $buku['tahun_terbit'] ?>" required>
-    </div>
+        <div class="form-group">
+            <label>Tahun Terbit</label>
+            <input type="text" name="tahun_terbit" class="form-input"
+                   value="<?= htmlspecialchars($tahun_terbit) ?>">
+            <span class="form-error"><?= $error_tahun_terbit ?></span>
+        </div>
 
-    <div>
-        <label>Kategori</label>
-        <select name="kategori">
-            <option value="umum"     <?= $buku['kategori']=='umum'?'selected':'' ?>>Umum</option>
-            <option value="jurnal"   <?= $buku['kategori']=='jurnal'?'selected':'' ?>>Jurnal</option>
-            <option value="skripsi"  <?= $buku['kategori']=='skripsi'?'selected':'' ?>>Skripsi</option>
-        </select>
-    </div>
+        <div class="form-group">
+            <label>Kategori</label>
+            <select name="kategori" class="form-input">
+                <option value="">-- Pilih Kategori --</option>
+                <option value="umum"   <?= ($kategori == 'umum') ? 'selected' : '' ?>>Umum</option>
+                <option value="jurnal" <?= ($kategori == 'jurnal') ? 'selected' : '' ?>>Jurnal</option>
+                <option value="skripsi"<?= ($kategori == 'skripsi') ? 'selected' : '' ?>>Skripsi</option>
+            </select>
+            <span class="form-error"><?= $error_kategori ?></span>
+        </div>
 
-    <button type="submit" name="submit" class="btn">Update Buku</button>
-    <a href="kelola_buku.php" class="btn btn-secondary">Kembali</a>
+        <button type="submit" name="submit" class="btn">Update Buku</button>
+        <a href="kelola_buku.php" class="btn btn-secondary">Kembali</a>
 
-</form>
+    </form>
 
 </div>
 

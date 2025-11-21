@@ -2,7 +2,6 @@
 require_once 'config.php';
 require_once 'database.php';
 
-
 // Ambil data (bisa banyak / 1 row)
 function fetchData(string $sql, array $params = [], bool $single = false) {
     $stmnt = DBH->prepare($sql);
@@ -28,9 +27,9 @@ function runQuery(string $sql, array $params = []) {
 
 // Register pemustaka
 function registerPemustaka(array $data){
-    $sql = "INSERT INTO users 
-            (nama_user, email, nim_nip, password, role)
-            VALUES (:nama, :email, :nim_nip, :password, 'pemustaka')";
+    $sql = "INSERT INTO pemustaka 
+            (nama_pemustaka, email, nim_nip, password)
+            VALUES (:nama, :email, :nim_nip, :password)";
     return runQuery($sql, [
         ':nama'     => $data['nama_user'],
         ':email'    => $data['email'],
@@ -40,9 +39,9 @@ function registerPemustaka(array $data){
 }
 
 // Login 
-function login(string $identity, string $password) {
+function loginPemustaka(string $identity, string $password) {
     $sql = "SELECT *
-            FROM users
+            FROM pemustaka
             WHERE email = :id OR nim_nip = :id
             LIMIT 1";
 
@@ -50,7 +49,20 @@ function login(string $identity, string $password) {
 
     if (!$user) return false;
 
-    return password_verify($password, $user['password']) ? $user : false;
+    return password_verify($password, $user['password_pemustaka']) ? $user : false;
+}
+
+function loginAdministrator(string $identity, string $password) {
+    $sql = "SELECT *
+            FROM administrator
+            WHERE email_admin = :id 
+            LIMIT 1";
+
+    $user = fetchData($sql, [':id' => $identity], true);
+
+    if (!$user) return false;
+
+    return password_verify($password, $user['password_admin']) ? $user : false;
 }
 
 
@@ -108,49 +120,100 @@ function deleteBook($id_buku) {
     return runQuery($sql, [':id' => $id_buku]);
 }
 
-function getAllPeminjaman() {
-    $sql = "SELECT
-                p.id_peminjaman,
-                p.tanggal_peminjaman,
-                p.tanggal_kembali,
-                p.status,
-                b.judul,
-                b.penulis,
-                b.kategori,
-                u.nama_user
-            FROM peminjaman p
-            JOIN buku b ON p.id_buku = b.id_buku
-            JOIN users u ON p.id_user = u.id_user
-            ORDER BY p.id_peminjaman DESC";
-
-    return fetchData($sql);
-}
-
-// lihat data pemustaka
-function getAllUsers() {
-    $sql = "SELECT id_user, nama_user, email, nim_nip, profil 
-            FROM users 
-            WHERE role = 'pemustaka'";
-    return fetchData($sql);
-}
 // jumlah peminjaman aktif
 function countActiveBorrow($id_user, $id_buku) {
     $sql = "SELECT COUNT(*) AS total 
             FROM peminjaman 
-            WHERE id_user = :u 
-              AND id_buku = :b 
-              AND status IN ('pending', 'borrow')";
+            WHERE id_pemustaka = :u AND id_buku = :b AND status IN ('pending', 'borrow')";
     return fetchData($sql, ['u' => $id_user, 'b' => $id_buku], true)['total'];
 }
+
 // Tambah peminjaman
 function createBorrow($id_user, $id_buku) {
-    $sql = "INSERT INTO peminjaman (id_user, id_buku, status, tanggal_peminjaman) 
+    $sql = "INSERT INTO peminjaman (id_pemustaka, id_buku, status, tanggal_peminjaman) 
             VALUES (:u, :b, 'pending', NOW())";
 
     return runQuery($sql, [
         'u' => $id_user,
         'b' => $id_buku
     ]);
+}
+
+// update status peminjaman
+function updateStatusPeminjaman(int $id_peminjaman, string $status) {
+    // Jika user mengembalikan buku
+    if ($status === 'returned') {
+        $sql = "UPDATE peminjaman 
+                SET status = :status, tanggal_kembali = CURDATE()
+                WHERE id_peminjaman = :id";
+
+    // Jika admin meng-approve (jadikan borrowed)
+    } elseif ($status === 'borrowed') {
+        $sql = "UPDATE peminjaman 
+                SET status = :status, tanggal_peminjaman = CURDATE()
+                WHERE id_peminjaman = :id";
+
+    // pending atau rejected
+    } else {
+        $sql = "UPDATE peminjaman 
+                SET status = :status
+                WHERE id_peminjaman = :id";
+    }
+
+    return runQuery($sql, [
+        ':status' => $status,
+        ':id'     => $id_peminjaman
+    ]);
+}
+
+// Ambil profil pemustaka
+function getProfilPemustaka(int $id_pemustaka) {
+    $sql = "SELECT nama_pemustaka, email, nim_nip, profil_pemustaka
+            FROM pemustaka
+            WHERE id_pemustaka = :id";
+    return fetchData($sql, ['id'=>$id_pemustaka], true);
+}
+
+// Update profil pemustaka (dengan optional file)
+function updateProfilPemustaka(int $id_pemustaka, array $data, ?array $file = null) {
+    $fotoProfil = $data['profil_lama'] ?? null;
+
+    if ($file && !empty($file['name'])) {
+        $uploadDir = '../assets/img/';
+
+        if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
+
+        $fileName = time() . '_' . basename($file['name']); // nama file unik
+        $targetPath = $uploadDir . $fileName;
+
+        if (move_uploaded_file($file['tmp_name'], $targetPath)) {
+            $fotoProfil = $fileName;
+        }
+    }
+    $sql = "UPDATE pemustaka
+            SET nama_pemustaka = :nama,
+                email = :email,
+                nim_nip = :nimnip,
+                profil_pemustaka = :profil
+            WHERE id_pemustaka = :id";
+
+    return runQuery($sql, [
+        ':nama'   => $data['nama_pemustaka'] ?? '',   
+        ':email'  => $data['email_pemustaka'] ?? '',  
+        ':nimnip' => $data['nim_nip_pemustaka'] ?? '',
+        ':profil' => $fotoProfil, // hanya nama file
+        ':id'     => $id_pemustaka
+    ]);
+}
+
+// ambil status peminjaman
+function getStatusPeminjaman($id) {
+    $result = fetchOne(
+        "SELECT status FROM peminjaman WHERE id_peminjaman = :id",
+        ['id' => $id]
+    );
+
+    return $result['status'] ?? null;
 }
 
 
@@ -208,84 +271,3 @@ function cek_format_identitas($data) {
 function cek_kesamaan_password($pass1, $pass2) {
     return $pass1 === $pass2;
 }
-
-function updateStatusPeminjaman(int $id_peminjaman, string $status) {
-    // Jika user mengembalikan buku
-    if ($status === 'returned') {
-        $sql = "UPDATE peminjaman 
-                SET status = :status, tanggal_kembali = CURDATE()
-                WHERE id_peminjaman = :id";
-
-    // Jika admin meng-approve (jadikan borrowed)
-    } elseif ($status === 'borrowed') {
-        $sql = "UPDATE peminjaman 
-                SET status = :status, tanggal_peminjaman = CURDATE()
-                WHERE id_peminjaman = :id";
-
-    // pending atau rejected
-    } else {
-        $sql = "UPDATE peminjaman 
-                SET status = :status
-                WHERE id_peminjaman = :id";
-    }
-
-    return runQuery($sql, [
-        ':status' => $status,
-        ':id'     => $id_peminjaman
-    ]);
-}
-
-
-// Ambil profil pemustaka
-function getProfilPemustaka(int $id_pemustaka) {
-    $sql = "SELECT nama_user, email, nim_nip, profil
-            FROM users
-            WHERE id_user = :id";
-    return fetchData($sql, ['id'=>$id_pemustaka], true);
-}
-
-// Update profil pemustaka (dengan optional file)
-function updateProfilPemustaka(int $id_pemustaka, array $data, ?array $file = null) {
-    $fotoProfil = $data['profil_lama'] ?? null;
-
-    if ($file && !empty($file['name'])) {
-        $uploadDir = '../assets/img/';
-
-        if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
-
-        $fileName = time() . '_' . basename($file['name']); // nama file unik
-        $targetPath = $uploadDir . $fileName;
-
-        if (move_uploaded_file($file['tmp_name'], $targetPath)) {
-            $fotoProfil = $fileName;
-        }
-    }
-    $sql = "UPDATE users
-            SET nama_user = :nama,
-                email = :email,
-                nim_nip = :nimnip,
-                profil = :profil
-            WHERE id_user = :id";
-
-    return runQuery($sql, [
-        ':nama'   => $data['nama_pemustaka'] ?? '',   
-        ':email'  => $data['email_pemustaka'] ?? '',  
-        ':nimnip' => $data['nim_nip_pemustaka'] ?? '',
-        ':profil' => $fotoProfil, // hanya nama file
-        ':id'     => $id_pemustaka
-    ]);
-}
-// ambil status peminjaman
-function getStatusPeminjaman($id) {
-    $result = fetchOne(
-        "SELECT status FROM peminjaman WHERE id_peminjaman = :id",
-        ['id' => $id]
-    );
-
-    return $result['status'] ?? null;
-}
-
-
-
-
-

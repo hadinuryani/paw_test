@@ -122,7 +122,7 @@ body {
 /* SEARCH BAR */
 .search-bar {
     flex: 1;
-    max-width: 500px;
+    max-width: 600px;
     position: relative;
 }
 
@@ -136,11 +136,14 @@ body {
 }
 
 .search-icon {
+    border: none;
+    background-color: transparent;
     position: absolute;
-    left: 16px;
+    right: 16px;
     top: 50%;
     transform: translateY(-50%);
     color: #9ca3af;
+    cursor: pointer;
 }
 
 /* USER SECTION */

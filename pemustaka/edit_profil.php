@@ -1,16 +1,18 @@
 <?php 
 session_start();
+require_once '../config/config.php';
+require_once '../config/function.php';
+// set data
 $data['title'] = 'document';
 $data['css'] = ['layout.css','book.css','card.css'];
 $data['header'] ='Categories';
-
+// cek session
 if(!($_SESSION['role'] == 'pemustaka' && $_SESSION['nama_user'])){
     header('location: ' . BASE_URL . 'login.php');
     exit;
 }
 
-require_once '../config/config.php';
-require_once '../config/function.php';
+
 
 $id_pemustaka = $_SESSION['user_id'] ?? null;
 
@@ -33,10 +35,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $userBaru = getProfilPemustaka($id_pemustaka);
 
         // Update seluruh session
-        $_SESSION['nama_user'] = $userBaru['nama_user'];
+        $_SESSION['nama_user'] = $userBaru['nama_pemustaka'];
         $_SESSION['email']     = $userBaru['email'];
         $_SESSION['nim_nip']   = $userBaru['nim_nip'];
-        $_SESSION['profil']    = $userBaru['profil'];
+        $_SESSION['profil']    = $userBaru['profil_pemustaka'];
 
         header("Location: profil.php?success=1");
         exit;
@@ -55,7 +57,7 @@ require_once '../components/header.php';
     <form method="POST" enctype="multipart/form-data" class="form-edit">
         <div>
             <label>Nama</label>
-            <input type="text" name="nama_pemustaka" value="<?= htmlspecialchars($profil['nama_user'] ?? ''); ?>" required>
+            <input type="text" name="nama_pemustaka" value="<?= htmlspecialchars($profil['nama_pemustaka'] ?? ''); ?>" required>
         </div>
         <div>
             <label>Email</label>
@@ -67,7 +69,7 @@ require_once '../components/header.php';
         </div>
         <div>
             <label>Foto Profil</label><br>
-            <img src="<?= BASE_URL; ?>assets/img/<?= $profil['profil'] ?? 'users.png'; ?>" 
+            <img src="<?= BASE_URL; ?>assets/img/<?= $profil['profil_pemustaka'] ?? 'users.png'; ?>" 
                  alt="Foto Profil" width="100" style="border-radius:50%;margin-bottom:10px;">
             <input type="file" name="profil" accept="image/*">
         </div>

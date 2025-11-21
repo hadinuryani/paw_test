@@ -1,20 +1,22 @@
 <?php 
 session_start();
+require_once '../config/config.php';
+require_once '../config/function.php';
+// set data
 $data['title'] = 'document';
 $data['css'] = ['layout.css','admin.css']; 
 $data['header'] ='Categories';
-
+// cek session
 if(!($_SESSION['role'] == 'pemustaka' && $_SESSION['nama_user'])){
     header('location: ' . BASE_URL . 'login.php');
     exit;
 }
 
-require_once '../config/config.php';
-require_once '../config/function.php';
+
 
 $id_pemustaka = $_SESSION['user_id'];
 
-$sql = "SELECT p.id_peminjaman, 
+$query = "SELECT p.id_peminjaman, 
                b.judul, 
                b.penulis, 
                p.tanggal_peminjaman, 
@@ -22,12 +24,10 @@ $sql = "SELECT p.id_peminjaman,
                p.status
         FROM peminjaman p
         JOIN buku b ON p.id_buku = b.id_buku
-        WHERE p.id_user = ?
+        WHERE p.id_pemustaka = ?
         ORDER BY p.tanggal_peminjaman DESC";
-
-$stmt = DBH->prepare($sql);
-$stmt->execute([$id_pemustaka]);
-$riwayat = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// ambil data riwayat
+$riwayat = fetchData($query,[$id_pemustaka],false);
 
 require_once '../components/header.php';
 ?>

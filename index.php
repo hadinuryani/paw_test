@@ -3,7 +3,7 @@ session_start();
 require_once 'config/config.php';
 require_once 'config/function.php';
 // set data
-$data['title'] = 'document';
+$data['title'] = 'Home Page';
 $data['css'] = ['layout.css','book.css'];
 $data['header'] ='Categories';
 // cek session
@@ -28,14 +28,14 @@ if ($kat) {
     $params['kat'] = $kat;
 }
 
-$sql = "SELECT * FROM buku";
+$query = "SELECT * FROM buku";
 if (!empty($where)) {
-    $sql .= " WHERE " . implode(" AND ", $where);
+    $query .= " WHERE " . implode(" AND ", $where);
 }
-$sql .= " ORDER BY id_buku DESC LIMIT 10";
+$query .= " ORDER BY id_buku DESC LIMIT 10";
 
-// lakukan query untuk ambil data buku berdasarkan parameter
-$books = fetchData($sql, $params);
+// ambil data buku
+$books = fetchData($query, $params);
 
 require_once 'components/header.php';
 ?>

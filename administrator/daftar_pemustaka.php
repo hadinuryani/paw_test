@@ -11,15 +11,14 @@ if(!($_SESSION['role'] == 'admin' && $_SESSION['nama_user'])){
     header('location: ' . BASE_URL . 'login.php');
     exit;
 }
+$query = "SELECT id_pemustaka, nama_pemustaka, email, nim_nip, profil_pemustaka
+            FROM pemustaka";
+$users = fetchData($query);
 
-$users = getAllUsers();
 require_once '../components/header.php';
-
-
 ?> 
 
-<div class="table-container">
-
+<section class="table-container">
     <table>
         <thead>
             <tr>
@@ -36,19 +35,18 @@ require_once '../components/header.php';
                 <td>
                     <div class="book-info">
                         <div class="profil">
-                            <?= $u['profil'] ? '<img src="'.BASE_URL.'assets/img/'.$u['profil'].'" alt="profil">' : '👤'; ?>
+                            <?= $u['profil_pemustaka'] ? '<img src="'.BASE_URL.'assets/img/'.$u['profil_pemustaka'].'" alt="profil">' : '👤'; ?>
                         </div>
                     </div>
                 </td>
 
-                <td><?= htmlspecialchars($u['nama_user']); ?></td>
+                <td><?= htmlspecialchars($u['nama_pemustaka']); ?></td>
                 <td><?= htmlspecialchars($u['email']); ?></td>
                 <td><?= htmlspecialchars($u['nim_nip']); ?></td>
             </tr>
             <?php endforeach; ?>
         </tbody>
     </table>
-
-</div>
+</section>
 
 <?php require_once '../components/footer.php'; ?>

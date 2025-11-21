@@ -1,11 +1,12 @@
 <?php
 session_start();
+require_once '../config/config.php';
+require_once '../config/function.php';
+// set data
 $data['title'] = 'document';
 $data['css'] = ['layout.css','book.css'];
 $data['header'] ='Categories';
-require_once '../config/config.php';
-require_once '../config/function.php';
-
+// set session
 if(!($_SESSION['role'] == 'pemustaka' && $_SESSION['nama_user'])){
     header('location: ' . BASE_URL . 'login.php');
     exit;
@@ -24,8 +25,7 @@ if (!$buku) {
     die("Buku tidak ditemukan.");
 }
 
-$msg = "";
-$err = "";
+$msg =$err = "";
 
 // Jika tombol PINJAM ditekan
 if (isset($_POST['pinjam'])) {

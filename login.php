@@ -6,7 +6,7 @@ require_once 'config/function.php';
 if (isset($_SESSION['user_id']) && isset($_SESSION['role'])) {
     // Jika admin  lempar ke dashboard admin
     if ($_SESSION['role'] == 'admin') {
-        header("Location: " . BASE_URL . "admin/dashboard.php");
+        header("Location: " . BASE_URL . "administrator/index.php");
         exit;
     }
     // Jika pemustaka lempar ke dashboard user
@@ -21,7 +21,7 @@ $identity = $password = '';
 $error_identity = $error_password = $error_general = '';
 
 // proses jika form disubmit
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
+if ($_SERVER["REQUEST_METHOD"] == "POST" ) {
     $identity = $_POST['identity'];
     $password = $_POST['password'];
 
@@ -38,29 +38,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
     // PROSES LOGIN (Hanya jika validasi dasar lolos)
     if (empty($error_identity) && empty($error_password)) {
         $identity_clean = test_input($identity); 
-        $user = login($identity_clean, $password);
 
-        if ($user === false) {
-            // Jika login gagal (data tidak cocok)
+        if($user = loginPemustaka($identity_clean, $password)){
+            $_SESSION['user_id']   = $user['id_pemustaka'];
+            $_SESSION['nama_user'] = $user['nama_pemustaka'];
+            $_SESSION['profil']    = $user['profil_pemustaka'];
+            $_SESSION['role'] = 'pemustaka';
+            header('location: ' . BASE_URL . 'index.php');
+            exit;
+        }
+        if($user = loginAdministrator($identity_clean, $password)){
+            $_SESSION['user_id']   = $user['id_admin'];
+            $_SESSION['nama_user'] = $user['nama_admin'];
+            $_SESSION['profil']    = $user['profil_admin'];
+            $_SESSION['role'] = 'admin';
+            header('location: ' . BASE_URL . 'administrator/index.php');
+            exit;
+        }else{
             $error_general = "Identitas atau password salah.";
-        } else {
-            // Jika login berhasil
-            // Cek role (Logika Anda di sini sudah benar)
-            if($user['role']  == 'pemustaka'){
-                $_SESSION['user_id']   = $user['id_user'];
-                $_SESSION['nama_user'] = $user['nama_user'];
-                $_SESSION['role']      = $user['role'];
-                $_SESSION['profil']    = $user['profil'];
-                header('location: ' . BASE_URL . 'index.php');
-                exit;
-            } elseif($user['role'] == 'admin'){
-                $_SESSION['user_id']   = $user['id_user'];
-                $_SESSION['nama_user'] = $user['nama_user'];
-                $_SESSION['role']      = $user['role'];
-                $_SESSION['profil']    = $user['profil'];
-                header('location: ' . BASE_URL . 'administrator/index.php');
-                exit;
-            }
         }
     }
 }
@@ -97,7 +92,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
             <div class="form-error"><?= $error_general ?></div>
             <?php endif; ?>
 
-            <form action="login.php" method="post">
+            <form action="#" method="post">
                 <div class="form-group">
                     <label class="form-label">Identitas (Email atau NIM/NIP)</label>
                     <input type="text" class="form-input" name="identity" placeholder="Masukkan email atau NIM/NIP" value="<?= htmlspecialchars($identity) ?>">
@@ -108,7 +103,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
                     <input type="password" name="password" class="form-input" placeholder="Masukkan password">
                     <span class="form-error"><?= $error_password ?></span>
                 </div>
-                <button type="submit" name="login" class="submit-btn">Login</button>
+                <button type="submit" class="submit-btn">Login</button>
             </form>
         </div>
     </div>

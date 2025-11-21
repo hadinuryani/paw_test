@@ -18,12 +18,14 @@
         <div class="content-area">
             <!-- Header -->
             <div class="header">
-                <?php if($_SESSION['role'] == 'pemustaka'): ?>
-                    <div class="search-bar">
-                        <span class="search-icon">🔍</span>
-                        <input type="text" placeholder="Search your favourite books">
-                    </div>
-                <?php else : ?>
+                <?php if($_SESSION['role'] == 'pemustaka' && $data['title'] === 'Home Page'): ?>
+                    <form class="search-bar" action="#" method="get">
+                        <input type="text" name="q" placeholder="Search books, authors..." value="<?= isset($_GET['q']) ? htmlspecialchars($_GET['q']) : ''; ?>">
+                        <button title="cari" class="search-icon" type="submit">🔍</button>
+                    </form>
+                <?php elseif($_SESSION['role'] == 'pemustaka') : ?>
+                    <div></div>
+                <?php elseif($_SESSION['role'] == 'admin') : ?>
                         <h1 class="text-dashbord">DASBORD ADMIN</h1>
                 <?php endif; ?>
                 <div class="user-section">

@@ -6,7 +6,7 @@ require_once 'config/function.php';
 if (isset($_SESSION['user_id']) && isset($_SESSION['role'])) {
     // Jika admin lempar ke dashboard admin
     if ($_SESSION['role'] == 'admin') {
-        header("Location: " . BASE_URL . "admin/dashboard.php");
+        header("Location: " . BASE_URL . "administrator/index.php");
         exit;
     }
     // Jika pemustaka lempar ke dashboard user
@@ -16,7 +16,6 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['role'])) {
     }
 }
 
-
 // Inisialisasi variabel
 $nama = $email = $nim_nip = $password = $confirm_password = '';
 $error_nama = $error_email = $error_nim_nip = $error_password = $error_confirm_password = '';
@@ -25,9 +24,7 @@ $error_general = '';
 // Jika tombol register ditekan
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register'])) {
 
-    // -------------------------
     // VALIDASI NAMA
-    // -------------------------
     if (!wajib_isi($_POST['nama'])) {
         $error_nama = "Nama lengkap wajib diisi.";
     } else {
@@ -36,10 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register'])) {
             $error_nama = "Nama hanya boleh berisi huruf dan spasi.";
         }
     }
-
-    // -------------------------
     // VALIDASI NIM/NIP
-    // -------------------------
     if (!wajib_isi($_POST['nim_nip'])) {
         $error_nim_nip = "NIM/NIP wajib diisi.";
     } else {
@@ -49,9 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register'])) {
         }
     }
 
-    // -------------------------
     // VALIDASI EMAIL
-    // -------------------------
     if (!wajib_isi($_POST['email'])) {
         $error_email = "Email wajib diisi.";
     } else {
@@ -61,9 +53,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register'])) {
         }
     }
 
-    // -------------------------
     // VALIDASI PASSWORD
-    // -------------------------
     $password = $_POST['password'];
     $confirm_password = $_POST['confirm_password'];
 
@@ -84,9 +74,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register'])) {
         }
     }
 
-    // -------------------------
-    // JIKA SEMUA VALIDASI LULUS
-    // -------------------------
+    // JIKA SEMUA VALIDASI LOLOS
     if (
         empty($error_nama) &&
         empty($error_email) &&
@@ -97,8 +85,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register'])) {
 
         // CEK DUPLIKASI EMAIL ATAU NIM
         $cek = fetchOne(
-            "SELECT id_user FROM users 
-             WHERE email = :email OR nim_nip = :nim LIMIT 1",
+            "SELECT id_pemustaka FROM pemustaka 
+            WHERE email = :email OR nim_nip = :nim LIMIT 1",
             [
                 ':email' => $email,
                 ':nim'   => $nim_nip
@@ -108,7 +96,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register'])) {
         if ($cek) {
             $error_general = "Email atau NIM/NIP sudah terdaftar.";
         } else {
-
+            
             // HASH PASSWORD
             $password_hash = password_hash($password, PASSWORD_DEFAULT);
 

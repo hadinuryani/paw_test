@@ -2,15 +2,30 @@
 session_start();
 require_once '../config/config.php';
 require_once '../config/function.php';
+// set data
 $data['title'] = 'kelola peminjaman';
 $data['css'] = ['layout.css','admin.css','alert.css'];
 $data['header'] ='Kelola Peminjaman';
+// cek session
 if(!($_SESSION['role'] == 'admin' && $_SESSION['nama_user'])){
     header('location: ' . BASE_URL . 'login.php');
     exit;
 }
-
-$peminjaman = getAllPeminjaman();
+// ambil data peminjaman
+$query = "SELECT
+        p.id_peminjaman,
+        p.tanggal_peminjaman,
+        p.tanggal_kembali,
+        p.status,
+        b.judul,
+        b.penulis,
+        b.kategori,
+        pm.nama_pemustaka
+    FROM peminjaman p
+    JOIN buku b ON p.id_buku = b.id_buku
+    JOIN pemustaka pm ON p.id_pemustaka = pm.id_pemustaka
+    ORDER BY p.id_peminjaman DESC";
+$peminjaman = fetchData($query);
 require_once '../components/header.php'
 ?> 
 <div class="alert-wrapper">
@@ -56,7 +71,7 @@ require_once '../components/header.php'
                 </td>
                 <td><?= $p['penulis']; ?></td>
                 <td><?= $p['kategori']; ?></td>
-                <td><?= $p['nama_user']; ?></td> <!-- Tambahan -->
+                <td><?= $p['nama_pemustaka']; ?></td> <!-- Tambahan -->
                 <td>
                     <?php if($p['status'] == 'pending'): ?>
                         <span class="badge badge-warning">Pending</span>
@@ -69,7 +84,6 @@ require_once '../components/header.php'
                     <?php endif; ?>
                 </td>
 
-
                 <td>
                     <div class="action-buttons">
                         <?php if ($p['status'] === 'pending'): ?>
@@ -77,14 +91,14 @@ require_once '../components/header.php'
                             <form action="update_status.php" method="POST" style="display:inline;">
                                 <input type="hidden" name="id" value="<?= $p['id_peminjaman']; ?>">
                                 <input type="hidden" name="status" value="borrow">
-                                <button class="icon-btn icon-btn-approve" type="submit" title="Terima permintaan">✔️ Terima</button>
+                                <button class="icon-btn icon-btn-approve" type="submit" title="Terima permintaan">✔️</button>
                             </form>
 
                             <!-- Tolak / Reject -->
                             <form action="update_status.php" method="POST" style="display:inline; margin-left:6px;">
                                 <input type="hidden" name="id" value="<?= $p['id_peminjaman']; ?>">
                                 <input type="hidden" name="status" value="rejected">
-                                <button class="icon-btn icon-btn-reject" type="submit" title="Tolak permintaan">✖️ Tolak</button>
+                                <button class="icon-btn icon-btn-reject" type="submit" title="Tolak permintaan">✖️</button>
                             </form>
 
                         <?php elseif ($p['status'] === 'borrow'): ?>
@@ -92,7 +106,7 @@ require_once '../components/header.php'
                             <form action="update_status.php" method="POST" style="display:inline;">
                                 <input type="hidden" name="id" value="<?= $p['id_peminjaman']; ?>">
                                 <input type="hidden" name="status" value="returned">
-                                <button class="icon-btn icon-btn-return" type="submit" title="Tandai dikembalikan">↩️ Kembalikan</button>
+                                <button class="icon-btn icon-btn-return" type="submit" title="Tandai dikembalikan">↩️</button>
                             </form>
 
                         <?php elseif ($p['status'] === 'rejected'): ?>

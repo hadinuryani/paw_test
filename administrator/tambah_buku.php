@@ -80,7 +80,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
         ];
 
         if (addBook($dataInsert)) {
-            header("Location: kelola_buku.php?success=1");
+            header("Location: kelola_buku.php?success=buku $judul berhasil di tambahkan");
             exit;
         } else {
             $error_general = "Gagal menambahkan buku";
