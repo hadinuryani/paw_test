@@ -1,4 +1,4 @@
-<?php 
+<?php
 session_start();
 require_once 'config/config.php';
 require_once 'config/function.php';
@@ -21,25 +21,39 @@ $identity = $password = '';
 $error_identity = $error_password = $error_general = '';
 
 // proses jika form disubmit
-if ($_SERVER["REQUEST_METHOD"] == "POST" ) {
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $identity = $_POST['identity'];
     $password = $_POST['password'];
 
-    // Validasi (Email/NIM/NIP)
+    // Validasi identity
     if (!wajib_isi($identity)) {
         $error_identity = "Email atau NIM/NIP wajib diisi.";
+    } else {
+        $identity_clean = test_input($identity);
+
+        if (cek_format_email($identity_clean)) {
+            $tipe_identity = "email";
+        } else if (cek_format_identitas($identity_clean)) {
+            $tipe_identity = "nim_nip";
+        } else {
+            $error_identity = "Format email atau NIM/NIP tidak valid.";
+        }
     }
 
-    // Validasi Password
+
+    // Validasi password
     if (!wajib_isi($password)) {
         $error_password = "Password wajib diisi.";
+    } elseif (!cek_panjang_minimal($password, 6)) {
+        $error_password = "Password minimal 6 karakter.";
     }
+
 
     // PROSES LOGIN (Hanya jika validasi dasar lolos)
     if (empty($error_identity) && empty($error_password)) {
-        $identity_clean = test_input($identity); 
+        $identity_clean = test_input($identity);
 
-        if($user = loginPemustaka($identity_clean, $password)){
+        if ($user = loginPemustaka($identity_clean, $password)) {
             $_SESSION['user_id']   = $user['id_pemustaka'];
             $_SESSION['nama_user'] = $user['nama_pemustaka'];
             $_SESSION['profil']    = $user['profil_pemustaka'];
@@ -47,14 +61,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" ) {
             header('location: ' . BASE_URL . 'index.php');
             exit;
         }
-        if($user = loginAdministrator($identity_clean, $password)){
+        if ($user = loginAdministrator($identity_clean, $password)) {
             $_SESSION['user_id']   = $user['id_admin'];
             $_SESSION['nama_user'] = $user['nama_admin'];
             $_SESSION['profil']    = $user['profil_admin'];
             $_SESSION['role'] = 'admin';
             header('location: ' . BASE_URL . 'administrator/index.php');
             exit;
-        }else{
+        } else {
             $error_general = "Identitas atau password salah.";
         }
     }
@@ -62,12 +76,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" ) {
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <link rel="stylesheet" href="<?= BASE_URL; ?>assets/css/auth.css">
 </head>
+
 <body>
     <!-- Login Page -->
     <div class="auth-container">
@@ -88,8 +104,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" ) {
                 <p class="auth-subtitle">Belum punya akun? <a href="<?= BASE_URL; ?>register.php">Register</a></p>
             </div>
 
-             <?php if(!empty($error_general)): ?>
-            <div class="form-error"><?= $error_general ?></div>
+            <?php if (!empty($error_general)): ?>
+                <div class="form-error"><?= $error_general ?></div>
             <?php endif; ?>
 
             <form action="#" method="post">
@@ -108,4 +124,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" ) {
         </div>
     </div>
 </body>
+
 </html>

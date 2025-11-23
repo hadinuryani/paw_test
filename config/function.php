@@ -28,7 +28,7 @@ function runQuery(string $sql, array $params = []) {
 // Register pemustaka
 function registerPemustaka(array $data){
     $sql = "INSERT INTO pemustaka 
-            (nama_pemustaka, email, nim_nip, password)
+            (nama_pemustaka, email, nim_nip, password_pemustaka)
             VALUES (:nama, :email, :nim_nip, :password)";
     return runQuery($sql, [
         ':nama'     => $data['nama_user'],

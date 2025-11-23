@@ -56,8 +56,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
         $error_tahun_terbit = "Tahun terbit wajib diisi.";
     } else {
         $tahun_terbit = test_input($_POST['tahun_terbit']);
-        if (!cek_panjang_tepat($tahun_terbit,4)) { 
+
+        if (!cek_panjang_tepat($tahun_terbit, 4)) {
             $error_tahun_terbit = "Tahun terbit harus 4 digit angka (ex: 2024).";
+        } else if ($tahun_terbit > date("Y")) {
+            $error_tahun_terbit = "Tahun terbit tidak boleh melebihi tahun sekarang.";
         }
     }
 

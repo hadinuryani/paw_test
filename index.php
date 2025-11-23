@@ -32,7 +32,7 @@ $query = "SELECT * FROM buku";
 if (!empty($where)) {
     $query .= " WHERE " . implode(" AND ", $where);
 }
-$query .= " ORDER BY id_buku DESC LIMIT 10";
+$query .= " ORDER BY id_buku DESC";
 
 // ambil data buku
 $books = fetchData($query, $params);
