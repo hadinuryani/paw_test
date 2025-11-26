@@ -30,7 +30,7 @@
                 href="<?= BASE_URL; ?>pemustaka/riwayat.php">
                     <!-- https://www.flaticon.com/ -->
                     <img class="menu-icon" src="<?= BASE_URL; ?>assets/img/riwayat.png" alt="icon">
-                    <span>Riwayat Pinjam</span>
+                    <span>Riwayat Peminjaman</span>
                 </a>
 
                 <a class="menu-item <?= $current == 'profil.php' ? 'active' : '' ?>" 

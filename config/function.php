@@ -189,13 +189,13 @@ function updateStatusPeminjaman(int $id_peminjaman, string $status) {
     // status returned → set tanggal kembali dengan waktu lengkap
     if ($status === 'returned') {
         $sql = "UPDATE peminjaman 
-                SET status = :status, tanggal_kembali = CURRENT_TIMESTAMP
+                SET status = :status, tanggal_kembali = CURDATE()
                 WHERE id_peminjaman = :id";
 
     // status borrow → set tanggal pinjam 
     } elseif ($status === 'borrow') {
         $sql = "UPDATE peminjaman 
-                SET status = :status, tanggal_peminjaman = CURRENT_TIMESTAMP
+                SET status = :status, tanggal_peminjaman = CURDATE()
                 WHERE id_peminjaman = :id";
 
     // status lain cukup update status aja
@@ -227,11 +227,11 @@ function updateProfilPemustaka(int $id_pemustaka, array $data, ?array $file = nu
 
     // kalau upload file baru
     if ($file && !empty($file['name'])) {
-        $uploadDir = '../assets/img/';
+        $uploadDir = '../assets/upload/';
 
         if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
 
-        // biar nama file unik
+        // agar nama file unik
         $fileName = time() . '_' . basename($file['name']); 
         $targetPath = $uploadDir . $fileName;
 

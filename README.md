@@ -6,16 +6,14 @@ halaman yang telah lolos validasi w3validator
 pemustaka->
 detail_buku.php✅
 edit_profil.php✅
-kembalikan_buku.php
 profil.php✅
 riwayat.php✅
 
 administrator->
 confirm_delete.php✅
 daftar_pemustaka.php✅
-delete_buku.php
-edit_buku.php✅
+edit_buku.php✅❌ (terindikasi bahasa malaysia)
 index.php✅
 kelola_buku.php✅
 tambah_buku.php✅
-update_status.php
+update_status.php✅

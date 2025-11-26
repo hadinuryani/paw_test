@@ -18,7 +18,7 @@ $users = fetchData($query);
 require_once '../components/header.php';
 ?> 
 
-<section class="table-container">
+<div class="table-container">
     <table>
         <thead>
             <tr>
@@ -35,7 +35,7 @@ require_once '../components/header.php';
                 <td>
                     <div class="profil-img">
                         <div class="profil">
-                            <img src="<?= BASE_URL; ?>assets/img/<?= $u['profil_pemustaka'] ? $u['profil_pemustaka'] : 'users.png' ?>" alt="profil pemustaka">
+                            <img src="<?= BASE_URL; ?>assets/upload/<?= $u['profil_pemustaka'] ? $u['profil_pemustaka'] : 'users.png' ?>" alt="profil pemustaka">
                         </div>
                     </div>
                 </td>
@@ -47,6 +47,6 @@ require_once '../components/header.php';
             <?php endforeach; ?>
         </tbody>
     </table>
-</section>
+</div>
 
 <?php require_once '../components/footer.php'; ?>

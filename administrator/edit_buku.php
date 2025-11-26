@@ -113,7 +113,7 @@ require_once '../components/header.php';
 ?>
 
 <div class="form-container">
-
+    <!-- peringatan error jika terjadi kesalahan  -->
     <?php if (!empty($error_general)): ?>
         <div class="alert alert-danger"><?= $error_general ?></div>
     <?php endif; ?>
@@ -128,7 +128,7 @@ require_once '../components/header.php';
         </div>
 
         <div class="form-group">
-            <label>Penulis</label>
+            <label>Nama Penulis</label>
             <input type="text" name="penulis" class="form-input"
                    value="<?= htmlspecialchars($penulis) ?>">
             <span class="form-error"><?= $error_penulis ?></span>
@@ -149,12 +149,12 @@ require_once '../components/header.php';
         </div>
 
         <div class="form-group">
-            <label>Kategori</label>
+            <label>Jenis Kategori</label>
             <select name="kategori" class="form-input">
                 <option value="">-- Pilih Kategori --</option>
                 <option value="umum"   <?= ($kategori == 'umum') ? 'selected' : '' ?>>Umum</option>
                 <option value="jurnal" <?= ($kategori == 'jurnal') ? 'selected' : '' ?>>Jurnal</option>
-                <option value="skripsi"<?= ($kategori == 'skripsi') ? 'selected' : '' ?>>Skripsi</option>
+                <option value="skripsi" <?= ($kategori == 'skripsi') ? 'selected' : '' ?>>Skripsi</option>
             </select>
             <span class="form-error"><?= $error_kategori ?></span>
         </div>
@@ -163,7 +163,7 @@ require_once '../components/header.php';
         <a href="kelola_buku.php" class="btn btn-secondary">Kembali</a>
 
     </form>
-
+    
 </div>
 
 <?php require_once '../components/footer.php'; ?>

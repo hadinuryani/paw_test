@@ -30,14 +30,14 @@
                 <?php elseif($_SESSION['role'] == 'pemustaka') : ?>
                     <div></div>
                 <?php elseif($_SESSION['role'] == 'admin') : ?>
-                        <h1 class="text-dashbord">DASBORD ADMIN</h1>
+                        <h1 class="text-dashbord">DASHBOARD ADMIN</h1>
                 <?php endif; ?>
 
                 <!-- profil card -->
                 <div class="user-section">
                     <div class="user-profile">
                         <!-- source users.png : https://www.flaticon.com/ -->
-                        <img src="<?= BASE_URL; ?>assets/img/<?= $_SESSION['profil'] ?? 'users.png'; ?>" class="user-avatar" alt="Foto Profil <?= $_SESSION['nama_user']; ?>">
+                        <img src="<?= BASE_URL; ?>assets/upload/<?= $_SESSION['profil'] ?? 'users.png'; ?>" class="user-avatar" alt="Foto Profil <?= $_SESSION['nama_user']; ?>">
                         <span><?= $_SESSION['nama_user']; ?></span>
                     </div>
                 </div>

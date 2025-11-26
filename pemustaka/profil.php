@@ -44,7 +44,7 @@ require_once '../components/header.php'
         <div class="profile-card">
 
             <!-- Kalau user belum upload foto, fallback ke users.png -->
-            <img src="<?= BASE_URL; ?>assets/img/<?= $profil['profil_pemustaka'] ? $profil['profil_pemustaka'] :'users.png'; ?>" 
+            <img src="<?= BASE_URL; ?>assets/upload/<?= $profil['profil_pemustaka'] ? $profil['profil_pemustaka'] :'users.png'; ?>" 
                 alt="Foto Profil" class="profile-photo">
 
             <div class="profile-info">

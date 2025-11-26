@@ -115,9 +115,9 @@ require_once '../components/header.php'
                                 </form>
 
                             <?php elseif ($p['status'] === 'rejected'): ?>
-                                <span class="badge badge-red">Ditolak</span>
+                                <span class="badge badge-red">-</span>
                             <?php else: ?>
-                                <span class="badge badge-blue">Selesai</span>
+                                <span class="badge badge-blue">-</span>
                             <?php endif; ?>
                         </div>
                     </td>

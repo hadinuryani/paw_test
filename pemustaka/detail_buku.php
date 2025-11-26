@@ -33,13 +33,13 @@ if (isset($_POST['pinjam'])) {
 
     $tgl_kembali = $_POST['tgl_kembali'] ?? '';
 
-    // Jika tombol pinjam di-klik pertama kali tanpa tanggal → tampilkan input
+    // Jika tombol pinjam di-klik pertama kali tanpa tanggal tampilkan input
     if (empty($tgl_kembali)) {
         $show_tanggal = true;
-        $err = "Silakan isi tanggal pengembalian buku.";
+        $err = "Silakan isi tanggal rencana pengembalian buku.";
     }
 
-    // Jika user sudah isi tanggal → lakukan validasi
+    // Jika user sudah isi tanggal lakukan validasi
     if (!empty($tgl_kembali)) {
 
         $tgl_kembali = test_input($tgl_kembali);
@@ -64,7 +64,7 @@ if (isset($_POST['pinjam'])) {
             }
         }
 
-        // Jika semua validasi lolos → cek database
+        // Jika semua validasi lolos cek database
         if (!$err) {
 
             // cek apakah user ini sudah meminjam buku
@@ -115,8 +115,8 @@ require_once '../components/header.php';
 
         <div class="text-info">
             <p><strong>Penulis:</strong> <?= $buku['penulis']; ?></p>
-            <p><strong>Kategori:</strong> <?= $buku['kategori']; ?></p>
-            <p><strong>Tahun Terbit:</strong> <?= $buku['tahun_terbit']; ?></p>
+            <p><strong>Jenis Kategori:</strong> <?= $buku['kategori']; ?></p>
+            <p><strong>Tahun Terbit Buku</strong> <?= $buku['tahun_terbit']; ?></p>
         </div>
 
         <!-- FORM PINJAM -->

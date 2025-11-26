@@ -6,7 +6,7 @@ require_once '../config/function.php';
 // set data
 $data['title'] = 'Edit Profil';
 $data['css'] = ['layout.css','profil.css','alert.css'];
-$data['header'] ='';
+$data['header'] ='Edit Profil';
 
 // cek session
 if(!($_SESSION['role'] == 'pemustaka' && $_SESSION['nama_user'])){
@@ -142,8 +142,7 @@ require_once '../components/header.php';
         <!-- FOTO -->
         <div class="form-group">
             <label>Foto Profil</label><br>
-            <img src="<?= BASE_URL; ?>assets/img/<?= $profil['profil_pemustaka'] ?? 'users.png'; ?>" 
-                 width="100" style="border-radius:50%; margin-bottom:10px;">
+            <img src="<?= BASE_URL; ?>assets/upload/<?= $profil['profil_pemustaka'] ?? 'users.png'; ?>" class="img-rounded" alt="profil_<?= $profil['profil_pemustaka']; ?>">
             <input type="file" name="profil" accept="image/*">
             <span class="form-error"><?= $error_foto ?></span>
         </div>

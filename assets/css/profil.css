@@ -251,3 +251,10 @@
     font-weight: 500;
     margin-top: 6px;
 }
+/* profil rounded */
+.img-rounded {
+    width: 100px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+    display: block; 
+}
