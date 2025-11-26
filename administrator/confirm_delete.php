@@ -28,26 +28,26 @@ if (!$b) {
 }
 require_once '../components/header.php';
 ?>
+    <!-- konfirmasi penghapusan -->
+    <div class="confirm-box">
+        <h2>Konfirmasi Penghapusan</h2>
+        <p>Apakah Anda yakin ingin menghapus buku:</p>
 
-<div class="confirm-box">
-    <h2>Konfirmasi Penghapusan</h2>
-    <p>Apakah Anda yakin ingin menghapus buku:</p>
+        <div class="book-info">
+            <div><strong><?= $b['judul']; ?></strong></div>
+            <span>Penulis: <?= $b['penulis']; ?></span>
+            <span>Kategori: <?= $b['kategori']; ?></span>
+            
+        </div>
 
-    <div class="book-info">
-        <div><strong><?= $b['judul']; ?></strong></div>
-        <span>Penulis: <?= $b['penulis']; ?></span>
-        <span>Kategori: <?= $b['kategori']; ?></span>
-        
+        <div class="confirm-actions">
+            <form action="delete_buku.php" method="POST">
+                <input type="hidden" name="id_buku" value="<?= $id_buku ?>">
+                <button type="submit" class="btn btn-danger">Ya, Hapus</button>
+            </form>
+
+            <a href="<?= BASE_URL; ?>administrator/kelola_buku.php" class="btn btn-secondary">Batal</a>
+        </div>
     </div>
-
-    <div class="confirm-actions">
-        <form action="delete_buku.php" method="POST">
-            <input type="hidden" name="id_buku" value="<?= $id_buku ?>">
-            <button type="submit" class="btn btn-danger">Ya, Hapus</button>
-        </form>
-
-        <a href="<?= BASE_URL; ?>administrator/kelola_buku.php" class="btn btn-secondary">Batal</a>
-    </div>
-</div>
 
 <?php require_once '../components/footer.php' ?>

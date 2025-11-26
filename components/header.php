@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- load semua css yang di kirim  -->
     <?php foreach($data['css'] as $c):?>
         <link rel="stylesheet" href="<?= BASE_URL. 'assets/css/'. $c; ?>">
     <?php endforeach ?>
@@ -11,11 +12,14 @@
 <body>
     
 <main class="container">
+
     <!-- navbar -->
     <?php require_once BASE_PATH . 'components/navbar.php'; ?>
+    
     <!-- Main Content -->
     <div class="main-content">
         <div class="content-area">
+
             <!-- Header -->
             <div class="header">
                 <?php if($_SESSION['role'] == 'pemustaka' && $data['title'] === 'Home Page'): ?>
@@ -28,12 +32,16 @@
                 <?php elseif($_SESSION['role'] == 'admin') : ?>
                         <h1 class="text-dashbord">DASBORD ADMIN</h1>
                 <?php endif; ?>
+
+                <!-- profil card -->
                 <div class="user-section">
                     <div class="user-profile">
+                        <!-- source users.png : https://www.flaticon.com/ -->
                         <img src="<?= BASE_URL; ?>assets/img/<?= $_SESSION['profil'] ?? 'users.png'; ?>" class="user-avatar" alt="Foto Profil <?= $_SESSION['nama_user']; ?>">
                         <span><?= $_SESSION['nama_user']; ?></span>
                     </div>
                 </div>
+
             </div>
 
             <!-- Categories -->

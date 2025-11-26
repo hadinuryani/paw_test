@@ -1,0 +1,37 @@
+/* Badge */
+.badge {
+    display: inline-block;
+    padding: 5px 12px;
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 12px;
+    text-transform: capitalize;
+    font-family: sans-serif;
+}
+
+/*warna badge  */
+.badge-green {
+    background: #e6f4ea;
+    color: #1e8a3e;
+    border: 1px solid #ccefd5;
+}
+
+.badge-yellow {
+    background: #fff7e6;
+    color: #b58000;
+    border: 1px solid #ffe8b3;
+}
+
+.badge-red {
+    background: #fdecea;
+    color: #d93025;
+    border: 1px solid #f9c6c1;
+}
+
+.badge-blue {
+    background: #e7f0fd;
+    color: #1a73e8;
+    border: 1px solid #c7dbfa;
+    text-decoration: none;
+}
+

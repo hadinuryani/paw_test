@@ -1,6 +1,10 @@
+/* text header dashboard */
+.text-dashbord {
+    margin: auto;
+    color: #4b5157;
+}
 
-
-/* card info */
+/* grid untuk card statistik */
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -8,21 +12,18 @@
     margin-bottom: 30px;
 }
 
+/* style dasar card statistik */
 .stat-card {
     background: white;
     padding: 24px;
     border-radius: 16px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    border-left: 4px solid #2563eb;
+    border-left: 4px solid #2563eb; /* warna default */
 }
 
-.stat-card:nth-child(2) {
-    border-left-color: #10b981;
-}
-
-.stat-card:nth-child(3) {
-    border-left-color: #f59e0b;
-}
+/* variasi warna border tiap card */
+.stat-card:nth-child(2) { border-left-color: #10b981; }
+.stat-card:nth-child(3) { border-left-color: #f59e0b; }
 
 .stat-header {
     display: flex;
@@ -53,80 +54,26 @@
     color: #10b981;
 }
 
-.filter-select {
-    padding: 12px 16px;
-    border: 2px solid #e5e7eb;
-    border-radius: 12px;
-    font-size: 14px;
-    cursor: pointer;
-    background: white;
+/* list pemustaka — foto profil */
+.profil-img {
+    display: flex;
+    align-items: center;
+    height: 40px;
 }
 
-.filter-select:focus {
-    outline: none;
-    border-color: #2563eb;
-}
-
-/* Tabel */
-.table-container {
-    background: white;
-    border-radius: 16px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+.profil-img .profil img {
+    width: 50px;
     overflow: hidden;
 }
 
-.table-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 24px;
-    border-bottom: 2px solid #f3f4f6;
-}
-
-.table-title {
-    font-size: 18px;
-    font-weight: 700;
-    color: #111827;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-thead {
-    background: #f9fafb;
-}
-
-th {
-    padding: 16px 24px;
-    text-align: left;
-    font-size: 13px;
-    font-weight: 600;
-    color: #6b7280;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-td {
-    padding: 16px 24px;
-    border-top: 1px solid #f3f4f6;
-}
-
-tbody tr {
-    transition: all 0.2s;
-}
-
-tbody tr:hover {
-    background: #f9fafb;
-}
-
+/* tampilan buku di panel admin */
 .book-info {
     display: flex;
     align-items: center;
     gap: 16px;
 }
 
+/* placeholder cover buku */
 .book-cover-small {
     width: 50px;
     height: 70px;
@@ -139,6 +86,7 @@ tbody tr:hover {
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
+/* detail buku */
 .book-details h4 {
     font-size: 14px;
     font-weight: 600;
@@ -151,34 +99,13 @@ tbody tr:hover {
     color: #6b7280;
 }
 
-.badge {
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 600;
-    display: inline-block;
-}
-
-.badge-success {
-    background: #d1fae5;
-    color: #065f46;
-}
-
-.badge-warning {
-    background: #fef3c7;
-    color: #92400e;
-}
-
-.badge-danger {
-    background: #fee2e2;
-    color: #991b1b;
-}
-
+/* tombol aksi (edit/delete) */
 .action-buttons {
     display: flex;
     gap: 8px;
 }
 
+/* style dasar tombol icon */
 .icon-btn {
     width: 36px;
     height: 36px;
@@ -187,57 +114,55 @@ tbody tr:hover {
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: 0.2s;
     border: none;
     font-size: 16px;
 }
 
+/* edit */
 .icon-btn-edit {
     background: #dbeafe;
     color: #1e40af;
 }
-
 .icon-btn-edit:hover {
     background: #2563eb;
     color: white;
 }
 
+/* delete */
 .icon-btn-delete {
     background: #fee2e2;
     color: #991b1b;
 }
-
 .icon-btn-delete:hover {
     background: #ef4444;
     color: white;
 }
 
+/* view */
 .icon-btn-view:hover {
     background: #10b981;
     color: white;
 }
 
-.profil img{
-    width: 90px;
-}
-/* form edit buku */
-
+/* container form tambah/edit buku */
 .form-edit {
     max-width: 700px;
     margin: 30px 20px;
     padding: 20px 25px;
     border: 1px solid #e0e0e0;
     border-radius: 8px;
-    background-color: #fafafa;
-    box-shadow: 0px 2px 8px rgba(0,0,0,0.05);
+    background: #fafafa;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     font-family: "Segoe UI", Tahoma, sans-serif;
 }
 
-/* Label dan input */
+/* spacing tiap group form */
 .form-edit div {
     margin-bottom: 18px;
 }
 
+/* label input */
 .form-edit label {
     font-size: 14px;
     font-weight: 600;
@@ -246,25 +171,26 @@ tbody tr:hover {
     color: #333;
 }
 
+/* input & select standard */
 .form-edit input,
 .form-edit select {
     width: 100%;
     padding: 10px 12px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    background-color: #fff;
-    transition: border 0.3s ease;
+    background: #fff;
+    transition: 0.3s;
 }
 
+/* fokus input */
 .form-edit input:focus,
 .form-edit select:focus {
     border-color: #007bff;
     outline: none;
-    box-shadow: 0px 0px 3px rgba(0, 123, 255, 0.25);
+    box-shadow: 0 0 3px rgba(0, 123, 255, 0.25);
 }
 
-/* Tombol */
-
+/* tombol utama form */
 .form-edit button.btn,
 .form-edit a.btn {
     padding: 10px 15px;
@@ -274,92 +200,91 @@ tbody tr:hover {
     display: inline-block;
     cursor: pointer;
     text-align: center;
-    transition: background 0.3s ease;
+    transition: 0.3s;
 }
 
+/* tombol submit */
 .form-edit button.btn {
-    background-color: #007bff;
+    background: #007bff;
     color: #fff;
     border: none;
 }
-
 .form-edit button.btn:hover {
-    background-color: #0056b3;
+    background: #0056b3;
 }
 
+/* tombol batal */
 .form-edit .btn-secondary {
-    background-color: #6c757d;
+    background: #6c757d;
     color: #fff;
     margin-left: 5px;
 }
-
 .form-edit .btn-secondary:hover {
-    background-color: #545b62;
+    background: #545b62;
 }
 
-/* tombol tambah buku admin */
-.btn-secondary{
+/* tombol tambah buku */
+.btn-secondary {
     padding: 8px 13px;
     text-decoration: none;
     border-radius: 10px;
 }
 
-/* form */
+/* container form baru */
 .form-container {
-    background: white; 
+    background: white;
     border-radius: 16px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     padding: 32px 24px;
 }
 
+/* judul form */
 .form-title {
     font-size: 20px;
     font-weight: 700;
-    color: #111827; 
+    color: #111827;
     margin-bottom: 30px;
 }
 
+/* group input */
 .form-group {
     margin-bottom: 20px;
 }
 
+/* label form modern */
 .form-label {
     display: block;
     font-size: 14px;
     font-weight: 600;
-    color: #374151; 
+    color: #374151;
     margin-bottom: 8px;
 }
 
+/* input modern rounded */
 .form-input {
     width: 100%;
     padding: 12px 16px;
-    border: 2px solid #e5e7eb; 
+    border: 2px solid #e5e7eb;
     border-radius: 12px;
     font-size: 14px;
     background: white;
-    transition: all 0.3s;
+    transition: 0.3s;
 }
 
+/* fokus input modern */
 .form-input:focus {
     outline: none;
-    border-color: #2563eb; 
+    border-color: #2563eb;
 }
 
 select.form-input {
     cursor: pointer;
 }
 
+/* error message */
 .form-error {
-    color: #ef4444; 
+    color: #ef4444;
     font-size: 14px;
     font-weight: 500;
-    display: block;
-    margin-top: 6px; 
-}
-/* teks h1 dasbord admin */
-.text-dashbord{
-    margin: auto;
-    color: #4b5157;
-
+    margin-top: 6px;
 }

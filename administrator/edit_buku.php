@@ -22,9 +22,7 @@ $id_buku = $_GET['id'];
 $buku = getBookById($id_buku);
 
 if (!$buku) {
-    echo "<p>Buku tidak ditemukan!</p>";
-    require_once '../components/footer.php';
-    exit;
+    die('buku tidak di temukan');
 }
 
 // --- Variabel form ---

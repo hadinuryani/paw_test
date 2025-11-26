@@ -4,7 +4,7 @@ require_once '../config/config.php';
 require_once '../config/function.php';
 // set data
 $data['title'] = 'Lihat Pemustaka';
-$data['css'] = ['layout.css','admin.css'];
+$data['css'] = ['layout.css','admin.css','table.css'];
 $data['header'] ='Lihat Daftar Pemustaka';
 // cek session
 if(!($_SESSION['role'] == 'admin' && $_SESSION['nama_user'])){
@@ -12,7 +12,7 @@ if(!($_SESSION['role'] == 'admin' && $_SESSION['nama_user'])){
     exit;
 }
 $query = "SELECT id_pemustaka, nama_pemustaka, email, nim_nip, profil_pemustaka
-            FROM pemustaka";
+          FROM pemustaka";
 $users = fetchData($query);
 
 require_once '../components/header.php';
@@ -33,9 +33,9 @@ require_once '../components/header.php';
             <?php foreach ($users as $u): ?>
             <tr>
                 <td>
-                    <div class="book-info">
+                    <div class="profil-img">
                         <div class="profil">
-                            <?= $u['profil_pemustaka'] ? '<img src="'.BASE_URL.'assets/img/'.$u['profil_pemustaka'].'" alt="profil">' : '👤'; ?>
+                            <img src="<?= BASE_URL; ?>assets/img/<?= $u['profil_pemustaka'] ? $u['profil_pemustaka'] : 'users.png' ?>" alt="profil pemustaka">
                         </div>
                     </div>
                 </td>

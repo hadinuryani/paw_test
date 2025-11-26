@@ -4,7 +4,7 @@ require_once '../config/config.php';
 require_once '../config/function.php';
 // set data
 $data['title'] = 'Manage Books';
-$data['css'] = ['layout.css','admin.css'];
+$data['css'] = ['layout.css','admin.css','table.css'];
 $data['header'] = 'Manage Books';
 // cek session
 if(!($_SESSION['role'] == 'admin' && $_SESSION['nama_user'])){
@@ -22,62 +22,62 @@ $books = fetchData("SELECT * FROM buku ORDER BY id_buku DESC");
 require_once '../components/header.php';
 ?>
 
-<!-- Stats Cards -->
-<div class="stats-grid">
-    <!-- Total Books -->
-    <div class="stat-card">
-        <div class="stat-header">
-            <span class="stat-label">Total Books</span>
-            <span class="stat-icon">📚</span>
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+        <!-- Total Books -->
+        <div class="stat-card">
+            <div class="stat-header">
+                <span class="stat-label">Total Books</span>
+                <span class="stat-icon">📚</span>
+            </div>
+            <div class="stat-value"><?= $totalBooks['total']; ?></div>
+            <div class="stat-change">Data realtime dari database</div>
         </div>
-        <div class="stat-value"><?= $totalBooks['total']; ?></div>
-        <div class="stat-change">Data realtime dari database</div>
+
+        <!-- Pending Review -->
+        <div class="stat-card">
+            <div class="stat-header">
+                <span class="stat-label">Pending Review</span>
+                <span class="stat-icon">⏳</span>
+            </div>
+            <div class="stat-value"><?= $pending['p']; ?></div>
+            <div class="stat-change">Jumlah buku yang sedang menunggu review</div>
+        </div>
     </div>
 
-    <!-- Pending Review -->
-    <div class="stat-card">
-        <div class="stat-header">
-            <span class="stat-label">Pending Review</span>
-            <span class="stat-icon">⏳</span>
-        </div>
-        <div class="stat-value"><?= $pending['p']; ?></div>
-        <div class="stat-change">Jumlah buku yang sedang menunggu review</div>
-    </div>
-</div>
+    <!-- Books Table -->
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>JUDUL</th>
+                    <th>PENULIS</th>
+                    <th>KATEGORI</th>
+                    <th>TAHUN TERBIT</th>
+                </tr>
+            </thead>
 
-<!-- Books Table -->
-<div class="table-container">
-    <table>
-        <thead>
-            <tr>
-                <th>JUDUL</th>
-                <th>PENULIS</th>
-                <th>KATEGORI</th>
-                <th>TAHUN TERBIT</th>
-            </tr>
-        </thead>
-
-        <tbody>
-            <?php foreach ($books as $b): ?>
-            <tr>
-                <td>
-                    <div class="book-info">
-                        <div class="book-cover-small">📖</div>
-                        <div class="book-details">
-                            <h4><?= $b['judul']; ?></h4>
-                            <p>Published: <?= $b['tahun_terbit']; ?></p>
+            <tbody>
+                <?php foreach ($books as $b): ?>
+                <tr>
+                    <td>
+                        <div class="book-info">
+                            <div class="book-cover-small">📖</div>
+                            <div class="book-details">
+                                <h4><?= $b['judul']; ?></h4>
+                                <p>Published: <?= $b['tahun_terbit']; ?></p>
+                            </div>
                         </div>
-                    </div>
-                </td>
+                    </td>
 
-                <td><?= $b['penulis']; ?></td>
-                <td><?= $b['kategori']; ?></td>
-                <td><?= $b['tahun_terbit']; ?></td>
-            </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
+                    <td><?= $b['penulis']; ?></td>
+                    <td><?= $b['kategori']; ?></td>
+                    <td><?= $b['tahun_terbit']; ?></td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
 
-</div>
+    </div>
 
 <?php require_once '../components/footer.php' ?>

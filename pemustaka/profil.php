@@ -2,11 +2,14 @@
 session_start();
 require_once '../config/config.php';
 require_once '../config/function.php';
-// set data
+
+// set data untuk halaman profil
 $data['title'] = 'Profil';
-$data['css'] = ['layout.css','card.css'];
-$data['header'] ='Categories';
-// cek session
+$data['css'] = ['layout.css','profil.css','alert.css'];
+$data['header'] ='Profil';
+
+// Cek apakah user benar-benar login sebagai pemustaka.
+// Kalau tidak, user langsung diarahkan ke login.
 if(!($_SESSION['role'] == 'pemustaka' && $_SESSION['nama_user'])){
     header('location: ' . BASE_URL . 'login.php');
     exit;
@@ -14,22 +17,33 @@ if(!($_SESSION['role'] == 'pemustaka' && $_SESSION['nama_user'])){
 
 $id_user = $_SESSION['user_id'];
 
-// Query ambil profil
+// Query ambil data profil pengguna.
 $sql = "SELECT nama_pemustaka, email, nim_nip, profil_pemustaka
         FROM pemustaka
         WHERE id_pemustaka = :id";
 
-$result = fetchData($sql, ['id' => $id_user]);
-
-$profil = $result ? $result[0] : null;
+// ambil data profil pengguna.
+$profil = fetchOne($sql, ['id' => $id_user]);
 
 require_once '../components/header.php'
-
 ?>
-<section class="card">
-    <h2>Profil Pemustaka</h2>
-    <?php if ($profil): ?>
+    <div class="alert-wrapper">
+        <!-- Alert ini hanya muncul kalau update profil sukses -->
+        <?php if (isset($_GET['success'])): ?>
+            <div class="alert alert-success">
+                <span class="alert-icon">✔️</span>
+                <?= htmlspecialchars($_GET['success']); ?>
+            </div>
+        <?php endif; ?>
+    </div>
+
+    <!-- Card profil -->
+    <section class="card">
+        <h2>Profil Pemustaka</h2>
+
         <div class="profile-card">
+
+            <!-- Kalau user belum upload foto, fallback ke users.png -->
             <img src="<?= BASE_URL; ?>assets/img/<?= $profil['profil_pemustaka'] ? $profil['profil_pemustaka'] :'users.png'; ?>" 
                 alt="Foto Profil" class="profile-photo">
 
@@ -38,13 +52,11 @@ require_once '../components/header.php'
                 <p><i class="fa fa-envelope"></i> <?= $profil['email']; ?></p>
                 <p><i class="fa fa-id-card"></i> <?= $profil['nim_nip']; ?></p>
 
+                <!-- Link ke halaman edit profil -->
                 <a href="edit_profil.php" class="btn-edit">Edit Profil</a>
             </div>
         </div>
 
-    <?php else: ?>
-        <p>Data profil tidak ditemukan.</p>
-    <?php endif; ?>
-
-</section>
+    </section>
+    
 <?php require_once '../components/footer.php' ?>

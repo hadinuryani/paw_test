@@ -2,19 +2,19 @@
 require_once 'config.php';
 require_once 'database.php';
 
-// Ambil data (bisa banyak / 1 row)
+// Ambil data dari database (bisa satu atau banyak)
 function fetchData(string $sql, array $params = [], bool $single = false) {
     $stmnt = DBH->prepare($sql);
     $stmnt->execute($params);
     return $single ? $stmnt->fetch(PDO::FETCH_ASSOC) : $stmnt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-// cumak nge wraper fungsi fetch data sih biar ngak mbingungin
+// Wrapper biar gampang ambil satu data
 function fetchOne(string $sql, array $params = []) {
     return fetchData($sql, $params, true);
 }
 
-// Jalankan query INSERT / UPDATE / DELETE
+// Eksekusi query INSERT / UPDATE / DELETE
 function runQuery(string $sql, array $params = []) {
     try {
         $stmt = DBH->prepare($sql);
@@ -25,7 +25,7 @@ function runQuery(string $sql, array $params = []) {
     }
 }
 
-// Register pemustaka
+// Register pemustaka baru
 function registerPemustaka(array $data){
     $sql = "INSERT INTO pemustaka 
             (nama_pemustaka, email, nim_nip, password_pemustaka)
@@ -38,8 +38,10 @@ function registerPemustaka(array $data){
     ]);
 }
 
-// Login 
+
+// Login pemustaka
 function loginPemustaka(string $identity, string $password) {
+    // cek apakah user login pakai email atau nim/nip
     $sql = "SELECT *
             FROM pemustaka
             WHERE email = :id OR nim_nip = :id
@@ -49,9 +51,11 @@ function loginPemustaka(string $identity, string $password) {
 
     if (!$user) return false;
 
+    // verifikasi password
     return password_verify($password, $user['password_pemustaka']) ? $user : false;
 }
 
+// Login admin
 function loginAdministrator(string $identity, string $password) {
     $sql = "SELECT *
             FROM administrator
@@ -67,21 +71,21 @@ function loginAdministrator(string $identity, string $password) {
 
 
 /* CRUD BUKU
-   ============================ */
+============================ */
 
-// Ambil semua buku 
+// Ambil daftar buku terbaru
 function getAllBooks() {
     $sql = "SELECT * FROM buku ORDER BY id_buku DESC";
     return fetchData($sql);
 }
 
-// Ambil 1 buku berdasarkan ID 
+// Ambil detail satu buku
 function getBookById($id_buku) {
     $sql = "SELECT * FROM buku WHERE id_buku = :id";
     return fetchData($sql, [':id' => $id_buku], true);
 }
 
-// Tambah buku 
+// Tambah buku baru
 function addBook($data) {
     $sql = "INSERT INTO buku 
             (judul, penulis, penerbit, tahun_terbit, kategori)
@@ -95,14 +99,15 @@ function addBook($data) {
     ]);
 }
 
-// Update buku
+// Edit data buku
 function updateBook($id_buku, $data) {
-    $sql = "UPDATE buku SET
-            judul = :judul,
-            penulis = :penulis,
-            penerbit = :penerbit,
-            tahun_terbit = :tahun_terbit,
-            kategori = :kategori
+    $sql = "UPDATE buku 
+            SET
+            judul       = :judul,
+            penulis     = :penulis,
+            penerbit    = :penerbit,
+            tahun_terbit= :tahun_terbit,
+            kategori    = :kategori
             WHERE id_buku = :id";
     return runQuery($sql, [
         ':judul'        => $data['judul'],
@@ -114,46 +119,86 @@ function updateBook($id_buku, $data) {
     ]);
 }
 
-// Hapus buku
+// Hapus buku by id
 function deleteBook($id_buku) {
     $sql = "DELETE FROM buku WHERE id_buku = :id";
     return runQuery($sql, [':id' => $id_buku]);
 }
 
-// jumlah peminjaman aktif
+// Hitung peminjaman aktif user untuk buku tertentu
 function countActiveBorrow($id_user, $id_buku) {
     $sql = "SELECT COUNT(*) AS total 
             FROM peminjaman 
-            WHERE id_pemustaka = :u AND id_buku = :b AND status IN ('pending', 'borrow')";
-    return fetchData($sql, ['u' => $id_user, 'b' => $id_buku], true)['total'];
+            WHERE id_pemustaka = :id_p AND id_buku = :id_b AND status IN ('pending', 'borrow')";
+    return fetchData($sql, ['id_p' => $id_user, 'id_b' => $id_buku], true)['total'];
 }
 
-// Tambah peminjaman
-function createBorrow($id_user, $id_buku) {
-    $sql = "INSERT INTO peminjaman (id_pemustaka, id_buku, status, tanggal_peminjaman) 
-            VALUES (:u, :b, 'pending', NOW())";
+// Cek apakah buku masih dalam status pending
+function isBookBorrowed($id_buku) {
+    $sql = "SELECT COUNT(*) FROM peminjaman
+            WHERE id_buku = :id_buku
+            AND status = 'pending'"; 
+    return fetchData($sql, ['id_buku' => $id_buku], true)['COUNT(*)'] > 0;
+}
+
+
+// Buat record peminjaman baru
+function createBorrow($id_user, $id_buku, $tgl_kembali) {
+    $sql = "INSERT INTO peminjaman (id_pemustaka, id_buku, status, tanggal_peminjaman, tanggal_kembali) 
+            VALUES (:id_p, :id_b, 'pending', NOW(), :tgl_k)";
 
     return runQuery($sql, [
-        'u' => $id_user,
-        'b' => $id_buku
+        'id_p' => $id_user,
+        'id_b' => $id_buku,
+        'tgl_k' => $tgl_kembali
     ]);
 }
 
-// update status peminjaman
+// update status otomatis saat tanggal peminjaman sudah lewat
+function autoUpdateStatusPeminjaman() {
+    $today = date('Y-m-d');
+
+    $rows = fetchData("SELECT id_peminjaman, tanggal_kembali, status FROM peminjaman");
+
+    foreach ($rows as $row) {
+        $id  = $row['id_peminjaman'];
+        $due = $row['tanggal_kembali'];
+        $st  = $row['status'];
+
+        $newStatus = null;
+
+        if ($st === 'borrow' && $today >= $due) {
+            $newStatus = 'returned';
+        }
+        if ($st === 'pending' && $today > $due) {
+            $newStatus = 'rejected';
+        }
+
+        if ($newStatus !== null) {
+            runQuery(
+                "UPDATE peminjaman SET status = :st WHERE id_peminjaman = :id",
+                [':st' => $newStatus, ':id' => $id]
+            );
+        }
+    }
+}
+
+// Update status peminjaman 
 function updateStatusPeminjaman(int $id_peminjaman, string $status) {
-    // Jika user mengembalikan buku
+
+    // status returned → set tanggal kembali dengan waktu lengkap
     if ($status === 'returned') {
         $sql = "UPDATE peminjaman 
-                SET status = :status, tanggal_kembali = CURDATE()
+                SET status = :status, tanggal_kembali = CURRENT_TIMESTAMP
                 WHERE id_peminjaman = :id";
 
-    // Jika admin meng-approve (jadikan borrowed)
-    } elseif ($status === 'borrowed') {
+    // status borrow → set tanggal pinjam 
+    } elseif ($status === 'borrow') {
         $sql = "UPDATE peminjaman 
-                SET status = :status, tanggal_peminjaman = CURDATE()
+                SET status = :status, tanggal_peminjaman = CURRENT_TIMESTAMP
                 WHERE id_peminjaman = :id";
 
-    // pending atau rejected
+    // status lain cukup update status aja
     } else {
         $sql = "UPDATE peminjaman 
                 SET status = :status
@@ -166,7 +211,8 @@ function updateStatusPeminjaman(int $id_peminjaman, string $status) {
     ]);
 }
 
-// Ambil profil pemustaka
+
+// Ambil profil user
 function getProfilPemustaka(int $id_pemustaka) {
     $sql = "SELECT nama_pemustaka, email, nim_nip, profil_pemustaka
             FROM pemustaka
@@ -174,22 +220,26 @@ function getProfilPemustaka(int $id_pemustaka) {
     return fetchData($sql, ['id'=>$id_pemustaka], true);
 }
 
-// Update profil pemustaka (dengan optional file)
+// Update profil (nama, email, foto)
 function updateProfilPemustaka(int $id_pemustaka, array $data, ?array $file = null) {
+    // default pakai foto lama
     $fotoProfil = $data['profil_lama'] ?? null;
 
+    // kalau upload file baru
     if ($file && !empty($file['name'])) {
         $uploadDir = '../assets/img/';
 
         if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
 
-        $fileName = time() . '_' . basename($file['name']); // nama file unik
+        // biar nama file unik
+        $fileName = time() . '_' . basename($file['name']); 
         $targetPath = $uploadDir . $fileName;
 
         if (move_uploaded_file($file['tmp_name'], $targetPath)) {
             $fotoProfil = $fileName;
         }
     }
+
     $sql = "UPDATE pemustaka
             SET nama_pemustaka = :nama,
                 email = :email,
@@ -201,12 +251,12 @@ function updateProfilPemustaka(int $id_pemustaka, array $data, ?array $file = nu
         ':nama'   => $data['nama_pemustaka'] ?? '',   
         ':email'  => $data['email_pemustaka'] ?? '',  
         ':nimnip' => $data['nim_nip_pemustaka'] ?? '',
-        ':profil' => $fotoProfil, // hanya nama file
+        ':profil' => $fotoProfil,
         ':id'     => $id_pemustaka
     ]);
 }
 
-// ambil status peminjaman
+// Ambil status peminjaman berdasarkan ID
 function getStatusPeminjaman($id) {
     $result = fetchOne(
         "SELECT status FROM peminjaman WHERE id_peminjaman = :id",
@@ -218,56 +268,57 @@ function getStatusPeminjaman($id) {
 
 
 /*  VALIDASI FORM
-   ======================*/
+=====================*/
 
-// Untuk Membersihkan spasi, backslash, dan tag HTML
+// Bersihkan input dari karakter aneh
 function test_input($data) {
     $data = trim($data);
     $data = stripslashes($data);
     $data = htmlspecialchars($data);
     return $data;
 }
-// Masukan Wajib Isi
+
+// Cek input wajib
 function wajib_isi($data){
     return !empty($data);
 }
 
-// Untuk nama penulis, nama pemustaka
+// Validasi nama (huruf saja)
 function alfabet($data) {
     return preg_match("/^[a-zA-Z\s',.]+$/", $data);
 }
 
-// Untuk judul buku, penerbit, kategori
+// Validasi judul / penerbit / kategori
 function alfanumerik($data) {
     return preg_match("/^[a-zA-Z0-9\s,.:()'&\-\/]+$/", $data);
 }
 
-// Untuk NIM/NIP, Tahun, dll.
+// Validasi angka
 function numerik($data) {
     return preg_match("/^[0-9]+$/", $data);
 }
 
-// Panjang minimal untuk password 
+// Minimal panjang karakter
 function cek_panjang_minimal($data, $min_len) {
     return strlen($data) >= $min_len;
 }
 
-// Untuk tahun terbit (4), NIM (12), dan NIP (18)
+// Panjang angka tertentu
 function cek_panjang_tepat($data, $panjang_tepat) {
 	return (preg_match("/^[0-9]+$/", $data) && strlen($data) == $panjang_tepat);
 }
 
-// Untuk email
+// Validasi email
 function cek_format_email($data) {
     return filter_var($data, FILTER_VALIDATE_EMAIL);
 }
 
- // Untuk cek apakah NIM (numerik AND panjang 12) ATAU NIP(numerik AND panjang 18)
+// Cek apakah identitas NIM (12 digit) atau NIP (18 digit)
 function cek_format_identitas($data) {
     return cek_panjang_tepat($data, 12) || cek_panjang_tepat($data, 18);
 }
 
-// Untuk Konfirmasi Password
+// Cek apakah password konfirmasi sama
 function cek_kesamaan_password($pass1, $pass2) {
     return $pass1 === $pass2;
 }

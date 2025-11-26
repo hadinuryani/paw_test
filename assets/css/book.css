@@ -6,7 +6,7 @@
     margin-bottom: 20px;
     flex-wrap: wrap;
 }
-
+/* button untuk kategori di halamam index */
 .category-btn {
     text-decoration: none    ; 
     padding: 10px 20px;
@@ -30,6 +30,7 @@
 }
 /* end kategori */
 
+
 /* layout buku */
 .books-grid {
     display: grid;
@@ -37,9 +38,8 @@
     gap: 20px;
     margin-bottom: 40px;
 }
-
+/* tampilan buku */
 .book-card {
-    cursor: pointer;
     transition: transform 0.3s;
     background-color: rgb(213, 239, 253);
     padding: 12px;
@@ -75,6 +75,14 @@
     text-align: center;
 }
 
+.title .cover-title{
+    font-weight: 700;
+}
+
+.title .cover-sub{
+    font-size: 11px;
+}
+
 /* Info buku */
 .book-info {
     display: flex;
@@ -96,7 +104,7 @@
     color: #6b7280;
 }
 
-/* Tombol detail */
+/* Tombol detail buku */
 .btn-book {
     margin-top: auto;
     display: flex;
@@ -115,8 +123,10 @@
 }
 
 
-/* halaman detail buku */
-.book-detail{
+/* HALAMAN DETAIL BUKU */
+
+/* card detail buku */
+section.book-detail{
     display: flex;
     gap: 30px;
     background: #fff;
@@ -149,6 +159,7 @@
     color: #1f2937;
 }
 
+/* cover judul buku */
 .book-cover-detail .title div:first-child {
     font-size: 20px;
     font-weight: 700;
@@ -156,12 +167,13 @@
     margin-bottom: 8px;
 }
 
+/* cover penulis buku */
 .book-cover-detail .title div:last-child {
     font-size: 14px;
     color: #6b7280;
 }
 
-/* Detail Info */
+/* Detail Info buku*/
 .detail-info{
     display: flex;
     flex-direction: column;
@@ -169,7 +181,6 @@
 }
 
 .detail-info h2{
-
     font-size: 28px;
     margin: 40px 0 0;
     color: #1f2937;
@@ -177,10 +188,24 @@
 
 .detail-info p{
     font-size: 16px;
+    padding-bottom: 10px;
     color: #374151;
 }
-/* button */
-.btn-primary{
+
+.text-info {
+    margin: 10px 0 10px 10px;
+}
+
+/* pesan peminjaman buku */
+.alert-success{
+    color:  rgb(0, 255, 38);
+}
+.alert-error{
+    color: crimson;
+}
+
+/* button pinjam buku */
+.btn-pinjam{
     padding: 10px 18px;
     background: #2563eb;
     color: #fff;
@@ -191,10 +216,11 @@
     transition: 0.2s;
 }
 
-.btn-primary:hover{
+.btn-pinjam:hover{
     background: #1e40af;
 }
 
+/* btn kembalikan buku */
 .btn-return{
     background-color: rgb(2, 166, 255);
     padding: 5px 10px;
@@ -202,21 +228,4 @@
     text-decoration: none;
     font-weight: 400;
     color: white;
-}
-/* pesan peminjaman buku */
-.alert-success{
-    color:  greenyellow;
-}
-.alert-error{
-    color: crimson;
-}
-/* responsif break point sidebar */
-@media (max-width: 768px) {
-    .sidebar {
-        display: none;
-    }
-    
-    .books-grid {
-        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    }
 }

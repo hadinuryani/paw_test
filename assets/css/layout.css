@@ -82,6 +82,12 @@ body {
     color: #1f2937;
 }
 
+.active {
+    background:#26acff !important;
+    box-shadow: 1px 1px 2px rgba(30, 48, 57, 0.388);
+    color: #1f2937;
+}
+
 .menu-icon {
     width: 20px;
     height: 20px;
@@ -146,7 +152,7 @@ body {
     cursor: pointer;
 }
 
-/* USER SECTION */
+/* PROFIL CARD*/
 .user-section {
     display: flex;
     align-items: center;
@@ -165,7 +171,9 @@ body {
     height: 40px;
     border-radius: 50%;
     background: rgb(118, 118, 118);
+    object-fit: cover; 
 }
+
 
 /* SECTION HEADER
 ========================================================= */
@@ -177,7 +185,7 @@ body {
     font-size: 25px;
 }
 
-/* RESPONSIVE
+/* RESPONSIVE LAYOUT
 ========================================================= */
 @media (max-width: 1200px) {
     .container {
@@ -187,5 +195,16 @@ body {
     .sidebar {
         position: relative;
         height: auto;
+    }
+}
+
+/* responsif break point sidebar */
+@media (max-width: 768px) {
+    .sidebar {
+        display: none;
+    }
+    
+    .books-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
     }
 }

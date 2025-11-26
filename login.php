@@ -22,6 +22,11 @@ $error_identity = $error_password = $error_general = '';
 
 // proses jika form disubmit
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // menghapus pesan login suses
+    if (isset($_GET['success'])) {
+        header("Location: login.php");
+        exit;
+    }
     $identity = $_POST['identity'];
     $password = $_POST['password'];
 
@@ -74,19 +79,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 ?>
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <link rel="stylesheet" href="<?= BASE_URL; ?>assets/css/auth.css">
+    <link rel="stylesheet" href="<?= BASE_URL; ?>assets/css/alert.css">
 </head>
 
 <body>
     <!-- Login Page -->
     <div class="auth-container">
+
+
+        <!-- bagian kanan -->
         <div class="auth-left">
             <div class="logo-section">
                 <div class="logo-icon-big">📚</div>
@@ -97,32 +107,51 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
             <div class="book-illustration">📖</div>
         </div>
-
+        <!-- bagian kiri -->
         <div class="auth-right">
             <div class="auth-header">
+                
+                <div class="alert-wrapper">
+                    <!-- jika proses register berhasil dan redirec ke login -->
+                    <?php if (isset($_GET['success'])): ?>
+                        <div class="alert alert-success">
+                            <span class="alert-icon">✔️</span>
+                            <?= htmlspecialchars($_GET['success']); ?>
+                        </div>
+                    <?php endif; ?>
+                    <?php if (!empty($error_general)): ?>
+                        <div class="alert alert-error">
+                            <span class="alert-icon">❌</span>
+                            <?= $error_general ?>
+                        </div>
+                    <?php endif; ?>
+
+                </div>
                 <h1 class="auth-title">Welcome Back!</h1>
                 <p class="auth-subtitle">Belum punya akun? <a href="<?= BASE_URL; ?>register.php">Register</a></p>
             </div>
 
-            <?php if (!empty($error_general)): ?>
-                <div class="form-error"><?= $error_general ?></div>
-            <?php endif; ?>
-
             <form action="#" method="post">
+
                 <div class="form-group">
-                    <label class="form-label">Identitas (Email atau NIM/NIP)</label>
-                    <input type="text" class="form-input" name="identity" placeholder="Masukkan email atau NIM/NIP" value="<?= htmlspecialchars($identity) ?>">
+                    <label for="identity" class="form-label">Identitas (Email atau NIM/NIP)</label>
+                    <input type="text" id="identity" class="form-input" name="identity" placeholder="Masukkan email atau NIM/NIP" value="<?= htmlspecialchars($identity) ?>">
                     <span class="form-error"><?= $error_identity ?></span>
                 </div>
+
                 <div class="form-group">
-                    <label class="form-label">Password</label>
-                    <input type="password" name="password" class="form-input" placeholder="Masukkan password">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" id="password" autocomplete="off" name="password" class="form-input" placeholder="Masukkan password">
                     <span class="form-error"><?= $error_password ?></span>
                 </div>
+
                 <button type="submit" class="submit-btn">Login</button>
             </form>
+
         </div>
+
     </div>
+    
 </body>
 
 </html>

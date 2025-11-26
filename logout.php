@@ -1,6 +1,7 @@
 <?php
 require_once 'config/config.php';
 session_start();
+// hapus session
 session_unset();
 session_destroy();
 
