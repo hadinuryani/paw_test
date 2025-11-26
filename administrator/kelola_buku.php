@@ -2,24 +2,30 @@
 session_start();
 require_once '../config/config.php';
 require_once '../config/function.php';
-// set data
+
+// set data tampilan halaman
 $data['title'] = 'Kelola Buku';
 $data['css'] = ['layout.css','admin.css','table.css','alert.css'];
 $data['header'] ='Kelola Buku';
-// cek session
+
+// cek akses admin
 if(!($_SESSION['role'] == 'admin' && $_SESSION['nama_user'])){
     header('location: ' . BASE_URL . 'login.php');
     exit;
 }
 
-// ambil data buku
+// ambil semua data buku
 $books = getAllBooks();
+
+// hitung total buku untuk ditampilkan di header tabel
 $totalBooks = fetchOne("SELECT COUNT(*) AS total FROM buku");
 
 require_once '../components/header.php'
 ?> 
+
     <div class="alert-wrapper">
         <?php if (isset($_GET['success'])): ?>
+            <!-- pesan sukses -->
             <div class="alert alert-success">
                 <span class="alert-icon">✔️</span>
                 <?= htmlspecialchars($_GET['success']); ?>
@@ -27,6 +33,7 @@ require_once '../components/header.php'
         <?php endif; ?>
 
         <?php if (isset($_GET['error'])): ?>
+            <!-- pesan error -->
             <div class="alert alert-error">
                 <span class="alert-icon">❌</span>
                 <?= htmlspecialchars($_GET['error']); ?>
@@ -34,13 +41,15 @@ require_once '../components/header.php'
         <?php endif; ?>
     </div>
 
+    <!-- header tabel + tombol tambah buku -->
     <div class="table-header">
         <h3 class="table-title">All Books (<?= $totalBooks['total']; ?>)</h3>
         <a href="<?= BASE_URL; ?>administrator/tambah_buku.php" class="btn btn-secondary" >
             <span>📤</span> Tambah
         </a>
     </div>
-        <!-- Books Table -->
+
+    <!-- Tabel data buku -->
     <div class="table-container">
         <table>
             <thead>
@@ -55,8 +64,8 @@ require_once '../components/header.php'
             </thead>
             <tbody>
                 <?php foreach ($books as $b): ?>
-
                     <tr>
+                        <!-- Info buku -->
                         <td>
                             <div class="book-info">
                                 📖
@@ -65,30 +74,26 @@ require_once '../components/header.php'
                                 </div>
                             </div>
                         </td>
+
                         <td><?= $b['penulis']; ?></td>
                         <td><?= $b['penerbit']; ?></td>
-                        <td><?= $b['tahun_terbit']; ?></td>
                         <td><?= $b['kategori']; ?></td>
+                        <td><?= $b['tahun_terbit']; ?></td>
+
+                        <!-- tombol aksi edit dan delete -->
                         <td>
                             <div class="action-buttons">
                                 <a href="edit_buku.php?id=<?= $b['id_buku'] ?>" class="icon-btn icon-btn-edit" title="edit buku">✏️</a>
-                                <form action="confirm_delete.php" method="POST" style="display:inline;">
+                                <form action="confirm_delete.php" method="POST" class="inline">
                                     <input type="hidden" name="id_buku" value="<?= $b['id_buku']; ?>">
                                     <button type="submit" class="icon-btn icon-btn-delete" title="delete buku">🗑️</button>
                                 </form>
                             </div>
                         </td>
                     </tr>
-
                 <?php endforeach ?>
-
             </tbody>
         </table>
-
     </div>
 
-
 <?php require_once '../components/footer.php' ?>
-
-
-

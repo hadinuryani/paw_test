@@ -288,3 +288,7 @@ select.form-input {
     font-weight: 500;
     margin-top: 6px;
 }
+/* class hidden untuk menyembunyikan element */
+.hidden{
+    display: none;
+}

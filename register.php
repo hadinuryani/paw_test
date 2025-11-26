@@ -157,7 +157,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <?php if(!empty($error_general)): ?>
                 <div class="form-error"><?= $error_general ?></div>
             <?php endif; ?>
-
+            <!-- form register pemustaka -->
             <form action="register.php" method="post">
                 <div class="form-group">
                     <label for="nama" class="form-label">Nama</label>

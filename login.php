@@ -130,7 +130,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <h1 class="auth-title">Welcome Back!</h1>
                 <p class="auth-subtitle">Belum punya akun? <a href="<?= BASE_URL; ?>register.php">Register</a></p>
             </div>
-
+            
+            <!-- form login -->
             <form action="#" method="post">
 
                 <div class="form-group">

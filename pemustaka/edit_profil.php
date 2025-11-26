@@ -110,46 +110,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 require_once '../components/header.php';
 ?>
 
-<section class="content">
-    <h2>Edit Profil</h2>
+    <section class="content">
+        <h2>Edit Profil</h2>
 
-    <form method="POST" enctype="multipart/form-data" class="form-edit">
+        <form method="POST" enctype="multipart/form-data" class="form-edit">
 
-        <!-- NAMA -->
-        <div class="form-group">
-            <label>Nama</label>
-            <input type="text" name="nama_pemustaka" 
-                   value="<?= htmlspecialchars($nama ?: ($profil['nama_pemustaka'] ?? '')) ?>">
-            <span class="form-error"><?= $error_nama ?></span>
-        </div>
+            <!-- NAMA -->
+            <div class="form-group">
+                <label>Nama</label>
+                <input type="text" name="nama_pemustaka" 
+                    value="<?= htmlspecialchars($nama ?: ($profil['nama_pemustaka'] ?? '')) ?>">
+                <span class="form-error"><?= $error_nama ?></span>
+            </div>
 
-        <!-- EMAIL -->
-        <div class="form-group">
-            <label>Email</label>
-            <input type="text" name="email_pemustaka" 
-                   value="<?= htmlspecialchars($email ?: ($profil['email'] ?? '')) ?>">
-            <span class="form-error"><?= $error_email ?></span>
-        </div>
+            <!-- EMAIL -->
+            <div class="form-group">
+                <label>Email</label>
+                <input type="text" name="email_pemustaka" 
+                    value="<?= htmlspecialchars($email ?: ($profil['email'] ?? '')) ?>">
+                <span class="form-error"><?= $error_email ?></span>
+            </div>
 
-        <!-- IDENTITAS -->
-        <div class="form-group">
-            <label>NIM / NIP</label>
-            <input type="text" name="nim_nip_pemustaka" 
-                   value="<?= htmlspecialchars($identitas ?: ($profil['nim_nip'] ?? '')) ?>">
-            <span class="form-error"><?= $error_identitas ?></span>
-        </div>
+            <!-- IDENTITAS -->
+            <div class="form-group">
+                <label>NIM / NIP</label>
+                <input type="text" name="nim_nip_pemustaka" 
+                    value="<?= htmlspecialchars($identitas ?: ($profil['nim_nip'] ?? '')) ?>">
+                <span class="form-error"><?= $error_identitas ?></span>
+            </div>
 
-        <!-- FOTO -->
-        <div class="form-group">
-            <label>Foto Profil</label><br>
-            <img src="<?= BASE_URL; ?>assets/upload/<?= $profil['profil_pemustaka'] ?? 'users.png'; ?>" class="img-rounded" alt="profil_<?= $profil['profil_pemustaka']; ?>">
-            <input type="file" name="profil" accept="image/*">
-            <span class="form-error"><?= $error_foto ?></span>
-        </div>
+            <!-- FOTO -->
+            <div class="form-group">
+                <label>Foto Profil</label><br>
+                <img src="<?= BASE_URL; ?>assets/upload/<?= $profil['profil_pemustaka'] ?? 'users.png'; ?>" class="img-rounded" alt="profil_<?= $profil['profil_pemustaka']; ?>">
+                <input type="file" name="profil" accept="image/*">
+                <span class="form-error"><?= $error_foto ?></span>
+            </div>
 
-        <button type="submit" class="btn">Simpan Perubahan</button>
-    </form>
+            <button type="submit" class="btn">Simpan Perubahan</button>
+        </form>
 
-</section>
+    </section>
 
 <?php require_once '../components/footer.php'; ?>

@@ -20,7 +20,7 @@ if (!$id_peminjaman || !$id_user) {
 
 // update status peminjaman menjadi returned + set tanggal kembali otomatis
 $sql = "UPDATE peminjaman 
-        SET status = 'returned', tanggal_kembali = CURRENT_TIMESTAMP()
+        SET status = 'returned', tanggal_kembali = CURDATE()
         WHERE id_peminjaman = :id_peminjaman 
         AND id_pemustaka = :id_user";
 

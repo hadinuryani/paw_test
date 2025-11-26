@@ -100,51 +100,51 @@ if (isset($_POST['pinjam'])) {
 require_once '../components/header.php';
 ?>
 
-<section class="book-detail">
+    <section class="book-detail">
 
-    <div class="book-cover-detail">
-        <div class="title">
-            <div><?= $buku['judul']; ?></div>
-            <div><?= $buku['penulis']; ?></div>
-        </div>
-    </div>
-
-    <div class="detail-info">
-
-        <h2><?= $buku['judul']; ?></h2>
-
-        <div class="text-info">
-            <p><strong>Penulis:</strong> <?= $buku['penulis']; ?></p>
-            <p><strong>Jenis Kategori:</strong> <?= $buku['kategori']; ?></p>
-            <p><strong>Tahun Terbit Buku</strong> <?= $buku['tahun_terbit']; ?></p>
+        <div class="book-cover-detail">
+            <div class="title">
+                <div><?= $buku['judul']; ?></div>
+                <div><?= $buku['penulis']; ?></div>
+            </div>
         </div>
 
-        <!-- FORM PINJAM -->
-        <form action="#" method="POST" class="form-edit">
+        <div class="detail-info">
 
-            <?php if ($show_tanggal): ?>
-                <label for="tgl_kembali">Tanggal Kembali</label>
-                <input
-                    type="date"
-                    name="tgl_kembali"
-                    id="tgl_kembali"
-                    value="<?= $_POST['tgl_kembali'] ?? '' ?>"
-                >
-            <?php endif; ?>
+            <h2><?= $buku['judul']; ?></h2>
 
-            <?php if ($msg): ?>
-                <div class="alert-success"><?= $msg; ?></div>
-            <?php endif; ?>
+            <div class="text-info">
+                <p><strong>Penulis:</strong> <?= $buku['penulis']; ?></p>
+                <p><strong>Jenis Kategori:</strong> <?= $buku['kategori']; ?></p>
+                <p><strong>Tahun Terbit Buku</strong> <?= $buku['tahun_terbit']; ?></p>
+            </div>
 
-            <?php if ($err): ?>
-                <div class="alert-error"><?= $err; ?></div>
-            <?php endif; ?>
+            <!-- FORM PINJAM -->
+            <form action="#" method="POST" class="form-edit">
 
-            <button type="submit" name="pinjam" class="btn-pinjam">Pinjam Buku</button>
-        </form>
+                <?php if ($show_tanggal): ?>
+                    <label for="tgl_kembali">Tanggal Kembali</label>
+                    <input
+                        type="date"
+                        name="tgl_kembali"
+                        id="tgl_kembali"
+                        value="<?= $_POST['tgl_kembali'] ?? '' ?>"
+                    >
+                <?php endif; ?>
 
-    </div>
+                <?php if ($msg): ?>
+                    <div class="alert-success"><?= $msg; ?></div>
+                <?php endif; ?>
 
-</section>
+                <?php if ($err): ?>
+                    <div class="alert-error"><?= $err; ?></div>
+                <?php endif; ?>
+
+                <button type="submit" name="pinjam" class="btn-pinjam">Pinjam Buku</button>
+            </form>
+
+        </div>
+
+    </section>
 
 <?php require_once '../components/footer.php'; ?>
